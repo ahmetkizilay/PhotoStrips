@@ -21,16 +21,16 @@ public class CompletionDialogFragment extends DialogFragment{
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage("wanna see the picture?")
+		builder.setMessage("Would you like to see the picture?")
 				.setCancelable(false)
-				.setPositiveButton("Yes, sure!",
+				.setPositiveButton("Yes!",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
 								((PhotoBoothActivity) getActivity()).positiveCompletionCallback();
 							}
 						})
-				.setNegativeButton("Not Now..",
+				.setNegativeButton("Later...",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();

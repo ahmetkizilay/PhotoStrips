@@ -575,7 +575,8 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 			public void run() {
 				try {
-					Thread.sleep(1000);
+                    long sleepTime = 750;
+					Thread.sleep(sleepTime);
 
 					if (!isCapturing)
 						return;
@@ -585,7 +586,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 					changeCaptureButtonText("3");
 					if (isSoundOn)
 						mpOne.start();
-					Thread.sleep(1000);
+					Thread.sleep(sleepTime);
 
 					if (!isCapturing)
 						return;
@@ -593,14 +594,14 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 					if (isSoundOn)
 						mpOne.start();
-					Thread.sleep(1000);
+					Thread.sleep(sleepTime);
 
 					if (!isCapturing)
 						return;
 					changeCaptureButtonText("1");
 					if (isSoundOn)
 						mpOne.start();
-					Thread.sleep(1000);
+					Thread.sleep(sleepTime);
 
 					if (!isCapturing)
 						return;
