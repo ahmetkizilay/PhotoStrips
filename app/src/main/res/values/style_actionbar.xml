@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<style name="style_mytheme" parent="@android:style/Theme.Black"> 
+	    <item name="android:windowTitleSize">48dp</item> 
+	    <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
+	    
+        <!-- for programmatic instantiation -->
+        <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
+
+    </style>
+
+    <style name="ActionBarCompat">
+        <item name="android:background">#ff000000</item>
+    </style>
+
+    <style name="ActionBarCompatTitleBase">
+        <item name="android:id">@id/actionbar_compat_title</item>
+        
+        <!-- layout_width/height/weight must be set in code -->
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
+    <style name="ActionBarCompatTitle" parent="style/ActionBarCompatTitleBase">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    
+    
+</resources>

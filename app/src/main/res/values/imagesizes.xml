@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>100x200</item>
+        <item>200x300</item>
+        <item>800x2012</item>
+    </string-array>
+</resources>

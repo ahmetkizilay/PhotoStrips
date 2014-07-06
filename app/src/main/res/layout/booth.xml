@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+    
+        <LinearLayout
+            android:id="@+id/loTopBlur"
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:layout_gravity="top"
+            android:background="#66cccccc"
+            android:gravity="top" />
+
+        <LinearLayout
+            android:id="@+id/loBottomBlur"
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:layout_gravity="bottom"
+            android:background="#66cccccc"
+            android:gravity="bottom" />
+
+    </FrameLayout>
+    
+    <LinearLayout
+        android:id="@+id/crop_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_vertical" >
+
+</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/loSettings"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="64dp"
+        android:layout_weight="1"
+        android:background="@drawable/settingspanel" >
+
+        <ImageButton
+            android:id="@+id/btnRotatePortrait"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/selectedbutton"
+            android:src="@drawable/phone" />
+        
+        <View
+            android:id="@+id/separator1"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="9dp"
+            android:layout_toRightOf="@id/btnRotatePortrait"
+            android:background="#90909090" />
+
+        <ImageButton
+            android:id="@+id/btnRotateLandscape"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toRightOf="@id/separator1"
+            android:background="@drawable/unselectedbutton"            
+            android:src="@drawable/phone_rot" />
+        
+        <ImageButton
+            android:id="@+id/btnSwitchCam"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toLeftOf="@+id/separator2"
+            android:src="@drawable/switch_cam" 
+            android:background="#00000000"/>
+
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="9dp"
+            android:layout_toLeftOf="@+id/btnSound"
+            android:background="#90909090" />
+
+
+
+        <ImageButton
+            android:id="@+id/btnSound"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:background="#00000000"
+            android:src="@drawable/sound_on"/>
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:id="@+id/loTransport"
+        android:layout_width="wrap_content"
+        android:layout_height="96dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/lowerpanel"
+        android:focusableInTouchMode="false"
+        android:stretchColumns="*" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/tw1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/one"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tw2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/two"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_capture"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="1"
+                android:background="@drawable/roundedbutton"
+                android:minHeight="64dip"
+                android:minWidth="64dip"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/tw3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/three"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tw4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/four"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+    </TableLayout>
+
+</FrameLayout>
