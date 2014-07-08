@@ -797,8 +797,10 @@ public class PhotoBoothActivity extends FragmentActivity {
 	 */
 	private void showPicture(String file) {
 		String selectedFile = file.replace("/mnt/", "/");
-		Intent showPicIntent = new Intent(Intent.ACTION_VIEW);
-		showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image/*");
+		Intent showPicIntent = new Intent(this, ViewImageActivity.class);
+        showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image/*");
+        showPicIntent.setAction("com.ahmetkizilay.image.photostrips.ViewImageActivity");
+
 		startActivity(showPicIntent);
 	}
 	

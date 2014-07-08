@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_gallery"
         android:title="gallery"
         android:orderInCategory="1"
@@ -10,7 +10,7 @@
         android:orderInCategory="0"
         android:icon="@drawable/booth"
         android:showAsAction="withText|ifRoom" />
-	 <item android:id="@+id/menu_about" android:title="about" 
+	 <item android:id="@+id/menu_about" android:title="ABOUT"
         android:orderInCategory="1"
-        android:showAsAction="never" />
+        android:showAsAction="never"/>
 </menu>

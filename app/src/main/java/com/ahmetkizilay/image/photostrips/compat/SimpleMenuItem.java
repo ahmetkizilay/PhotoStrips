@@ -48,7 +48,7 @@ public class SimpleMenuItem implements MenuItem {
         mMenu = menu;
         mId = id;
         mOrder = order;
-        mTitle = title;
+        mTitle = title.toString();
     }
 
     public int getItemId() {

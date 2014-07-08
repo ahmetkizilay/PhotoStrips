@@ -7,7 +7,8 @@
 
     <com.ahmetkizilay.image.photostrips.utils.CustomHorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent" android:id="@+id/hswGallery">
+        android:layout_height="fill_parent" android:id="@+id/hswGallery"
+        android:layout_marginTop="50dp">
 
        <LinearLayout
             android:id="@+id/mygallery"

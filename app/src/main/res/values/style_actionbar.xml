@@ -3,14 +3,15 @@
 	<style name="style_mytheme" parent="@android:style/Theme.Black"> 
 	    <item name="android:windowTitleSize">48dp</item> 
 	    <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
+        <item name="android:background">@drawable/lowerpanel</item>
 	    
         <!-- for programmatic instantiation -->
         <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
-
     </style>
 
     <style name="ActionBarCompat">
-        <item name="android:background">#ff000000</item>
+        <item name="android:background">@color/bluish</item>
+        <item name="android:color">@color/bluish</item>
     </style>
 
     <style name="ActionBarCompatTitleBase">

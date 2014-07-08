@@ -171,9 +171,15 @@ public class GalleryActivity extends FragmentActivity {
 
 			public void onClick(View v) {
 				String selectedFile = photo.getAbsolutePath();
-				Intent showPicIntent = new Intent(Intent.ACTION_VIEW);
-				showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image/*");
-				startActivity(showPicIntent);
+
+                Intent showPicIntent = new Intent(GalleryActivity.this, ViewImageActivity.class);
+                showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image*//*");
+                showPicIntent.setAction("com.ahmetkizilay.image.photostrips.ViewImageActivity");
+                GalleryActivity.this.startActivity(showPicIntent);
+
+				/*Intent showPicIntent = new Intent(Intent.ACTION_VIEW);
+				showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image*//*");
+				startActivity(showPicIntent);*/
 			}
 		});
 

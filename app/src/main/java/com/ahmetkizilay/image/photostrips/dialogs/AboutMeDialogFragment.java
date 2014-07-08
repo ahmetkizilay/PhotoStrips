@@ -26,14 +26,14 @@ public class AboutMeDialogFragment extends DialogFragment{
 				"Version 1.0\n\nPERISONiC Sound And Media")
 				.setCancelable(false)
 				.setTitle("PhotoStrips")
-				.setIcon(R.drawable.ic_launcher)
+				.setIcon(R.drawable.ic_photostrips)
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
 					}
-				}).setPositiveButton("Follow Me", new DialogInterface.OnClickListener() {
+				}).setPositiveButton("FOLLOW ME", new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
 						Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mobile.twitter.com/ahmetkizilay"));				
