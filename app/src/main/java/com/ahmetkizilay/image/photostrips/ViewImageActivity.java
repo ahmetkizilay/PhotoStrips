@@ -74,14 +74,6 @@ public class ViewImageActivity extends FragmentActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment prev = getSupportFragmentManager().findFragmentByTag("confirm-delete");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
                 ConfirmDialogFragment deleteConfirmDialog = ConfirmDialogFragment.newInstance("Are you sure to delete this picture?", "Delete", "Cancel");
                 deleteConfirmDialog.setConfirmDialogResultListener(new ConfirmDialogFragment.ConfirmDialogResultListener() {
                     public void onPositiveSelected() {
@@ -97,9 +89,21 @@ public class ViewImageActivity extends FragmentActivity {
                     }
                 });
 
-                deleteConfirmDialog.show(ft, "confirm-delete");
+                pushToStack(deleteConfirmDialog, "confirm-delete");
             }
         });
+    }
+
+    private void pushToStack(DialogFragment frag, String label) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(label);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        frag.show(ft, label);
+
     }
 
     @Override

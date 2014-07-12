@@ -1,7 +1,5 @@
 package com.ahmetkizilay.image.photostrips.dialogs;
 
-import com.ahmetkizilay.image.photostrips.PhotoBoothActivity;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,10 +13,6 @@ public class ConfirmDialogFragment extends DialogFragment{
     private static final String MESSAGE_LABEL = "message";
     private static final String POSITIVE_LABEL = "confirm";
     private static final String NEGATIVE_LABEL = "cancel";
-
-    private String mMessage;
-    private String mPositiveLabel;
-    private String mNegativeLabel;
 
 	public static ConfirmDialogFragment newInstance(String message) {
 		ConfirmDialogFragment frag = new ConfirmDialogFragment();
@@ -42,27 +36,27 @@ public class ConfirmDialogFragment extends DialogFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
 
-        this.mMessage = (String) bundle.get(MESSAGE_LABEL);
-        this.mPositiveLabel = bundle.get(POSITIVE_LABEL) != null ? (String) bundle.get(POSITIVE_LABEL) : "Confirm";
-        this.mNegativeLabel = bundle.get(NEGATIVE_LABEL) != null ? (String) bundle.getString(NEGATIVE_LABEL) : "Cancel";
-
-    }
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+        String message = (String) bundle.get(MESSAGE_LABEL);
+        String positiveLabel = bundle.get(POSITIVE_LABEL) != null ? (String) bundle.get(POSITIVE_LABEL) : "Confirm";
+        String negativeLabel = bundle.get(NEGATIVE_LABEL) != null ? (String) bundle.get(NEGATIVE_LABEL) : "Cancel";
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage(this.mMessage)
+		builder.setMessage(message)
 				.setCancelable(false)
-				.setPositiveButton(this.mPositiveLabel,
+				.setPositiveButton(positiveLabel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
 								mCallback.onPositiveSelected();
 							}
 						})
-				.setNegativeButton(this.mNegativeLabel,
+				.setNegativeButton(negativeLabel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
