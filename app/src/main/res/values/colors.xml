@@ -2,4 +2,7 @@
 <resources>
     <color name="gray">#ff666666</color>
     <color name="bluish">#496B82</color>
+    <color name="et_empty">#222</color>
+    <color name="et_default">#111</color>
+
 </resources>

@@ -24,4 +24,9 @@ android {
 
 dependencies {
     compile files('libs/android-support-v13.jar')
+    compile(name: 'listapps', ext: 'aar')
+}
+
+repositories {
+    flatDir { dirs 'aars' }
 }

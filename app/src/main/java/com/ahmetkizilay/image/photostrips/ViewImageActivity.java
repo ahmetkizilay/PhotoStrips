@@ -3,32 +3,103 @@ package com.ahmetkizilay.image.photostrips;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
+import com.ahmetkizilay.image.photostrips.dialogs.ConfirmDialogFragment;
 import com.ahmetkizilay.image.photostrips.utils.TouchImageView;
+import com.ahmetkizilay.modules.listapps.AppListerViewGroup;
+
+import java.io.File;
 
 public class ViewImageActivity extends FragmentActivity {
     // using this for faking an action bar for earlier versions of android.
     final ActionBarHelper mActionBarHelper = ActionBarHelper.createInstance(this);
 
+    private AppListerViewGroup wgSharePanel;
+    private Uri mPicture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActionBarHelper.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
+        this.mPicture = Uri.parse(intent.getDataString());
 
         setContentView(R.layout.display_image);
 
-        TouchImageView touchImageView = (TouchImageView) findViewById(R.id.img);
+        final TouchImageView touchImageView = (TouchImageView) findViewById(R.id.img);
+        touchImageView.setImageURI(this.mPicture);
 
-        touchImageView.setImageURI(Uri.parse(intent.getDataString()));
+        this.wgSharePanel = (AppListerViewGroup) findViewById(R.id.wgAppListerBottom);
+        this.wgSharePanel.setListItemClickedListener(new AppListerViewGroup.ListItemClickedListener() {
+            public void onListItemClicked(String packageName, String appName) {
+                wgSharePanel.setVisibility(View.INVISIBLE);
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+                shareIntent.setType("image/*");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, mPicture);
+                shareIntent.setClassName(packageName, appName);
+
+                startActivity(shareIntent);
+            }
+        });
+
+        ImageButton btnToggleBottom = (ImageButton) findViewById(R.id.btnShare);
+        btnToggleBottom.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                if (ViewImageActivity.this.wgSharePanel.getVisibility() == View.VISIBLE) {
+                    ViewImageActivity.this.wgSharePanel.setVisibility(View.INVISIBLE);
+                } else {
+                    ViewImageActivity.this.wgSharePanel.setMinimalMode();
+                    ViewImageActivity.this.wgSharePanel.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ImageButton btnDelete = (ImageButton) findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag("confirm-delete");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                ConfirmDialogFragment deleteConfirmDialog = ConfirmDialogFragment.newInstance("Are you sure to delete this picture?", "Delete", "Cancel");
+                deleteConfirmDialog.setConfirmDialogResultListener(new ConfirmDialogFragment.ConfirmDialogResultListener() {
+                    public void onPositiveSelected() {
+                        File file = new File(mPicture.getPath());
+                        file.delete();
+
+                        setResult(RESULT_CANCELED, new Intent());
+                        finish();
+                    }
+
+                    public void onNegativeSelected() {
+                        // do nothing
+                    }
+                });
+
+                deleteConfirmDialog.show(ft, "confirm-delete");
+            }
+        });
     }
 
     @Override

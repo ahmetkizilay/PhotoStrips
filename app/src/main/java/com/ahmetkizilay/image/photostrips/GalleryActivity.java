@@ -175,11 +175,8 @@ public class GalleryActivity extends FragmentActivity {
                 Intent showPicIntent = new Intent(GalleryActivity.this, ViewImageActivity.class);
                 showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image*//*");
                 showPicIntent.setAction("com.ahmetkizilay.image.photostrips.ViewImageActivity");
-                GalleryActivity.this.startActivity(showPicIntent);
+                GalleryActivity.this.startActivityForResult(showPicIntent, 0);
 
-				/*Intent showPicIntent = new Intent(Intent.ACTION_VIEW);
-				showPicIntent.setDataAndType(Uri.parse("file://" + selectedFile), "image*//*");
-				startActivity(showPicIntent);*/
 			}
 		});
 
@@ -265,6 +262,26 @@ public class GalleryActivity extends FragmentActivity {
 
 		}
 	}
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 0) {
+            myGallery.removeAllViews();
+
+            final File[] photos = getFiles();
+
+            if (photos == null) {
+                return;
+            }
+
+            this.totalNumberOfPhotos = photos.length;
+            this.numberOfPhotosDisplayed = 0;
+
+            final int initPhotoCount = Math.min((int) Math.ceil((float) disp_width / 150) * 2, totalNumberOfPhotos);
+            Thread t = new Thread(new InsertPhotoRunnable(myGallery, 0, initPhotoCount));
+            t.start();
+        }
+    }
 	
 	/* ********* BEGIN METHODS RELATED TO THE ACTION BAR ********************** */
 	protected ActionBarHelper getActionBarHelper() {
