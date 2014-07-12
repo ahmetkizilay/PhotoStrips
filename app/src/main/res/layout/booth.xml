@@ -119,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/lowerpanel"
             android:layout_weight="1" >
 
             <TextView
@@ -128,7 +129,8 @@
                 android:layout_gravity="center"
                 android:text="@string/one"
                 android:textSize="48sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@drawable/lowerpanel"/>
 
             <TextView
                 android:id="@+id/tw2"
@@ -137,7 +139,8 @@
                 android:layout_gravity="center"
                 android:text="@string/two"
                 android:textSize="48sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@drawable/lowerpanel"/>
 
             <Button
                 android:id="@+id/button_capture"
@@ -159,7 +162,8 @@
                 android:layout_gravity="center"
                 android:text="@string/three"
                 android:textSize="48sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@drawable/lowerpanel"/>
 
             <TextView
                 android:id="@+id/tw4"
@@ -168,7 +172,8 @@
                 android:layout_gravity="center"
                 android:text="@string/four"
                 android:textSize="48sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@drawable/lowerpanel"/>
 
         </TableRow>
     </TableLayout>

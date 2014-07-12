@@ -3,8 +3,7 @@
 	<style name="style_mytheme" parent="@android:style/Theme.Black"> 
 	    <item name="android:windowTitleSize">48dp</item> 
 	    <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
-        <item name="android:background">@drawable/lowerpanel</item>
-	    
+
         <!-- for programmatic instantiation -->
         <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
     </style>
@@ -23,11 +22,11 @@
         <item name="android:paddingRight">6dp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
+        <item name="android:background">@color/bluish</item>
     </style>
 
     <style name="ActionBarCompatTitle" parent="style/ActionBarCompatTitleBase">
         <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@color/bluish</item>
     </style>
-    
-    
 </resources>
