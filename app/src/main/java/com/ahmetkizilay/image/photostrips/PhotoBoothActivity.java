@@ -64,7 +64,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 	private boolean isCapturing = false;
 	private boolean isSoundOn = true;
-	private boolean isPortaitView = true;
+	private boolean isPortaitView = false;
 
 	private int photoCount = 0;
 	List<String> photoParts = new ArrayList<String>();
@@ -411,8 +411,8 @@ public class PhotoBoothActivity extends FragmentActivity {
 		case R.id.menu_gallery:
 			if(isCapturing) revertControls(true);
 			
-			Intent switchViewIntent = new Intent(this, GalleryActivity.class);
-			switchViewIntent.setAction("com.ahmetkizilay.image.photostrips.GalleryActivity");			
+			Intent switchViewIntent = new Intent(this, AltGalleryActivity.class);
+			switchViewIntent.setAction("com.ahmetkizilay.image.photostrips.AltGalleryActivity");
 			this.startActivity(switchViewIntent);
 			return true;
 		default:

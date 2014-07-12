@@ -54,7 +54,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/selectedbutton"
+            android:background="@drawable/unselectedbutton"
             android:src="@drawable/phone" />
         
         <View
@@ -70,7 +70,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_toRightOf="@id/separator1"
-            android:background="@drawable/unselectedbutton"            
+            android:background="@drawable/selectedbutton"
             android:src="@drawable/phone_rot" />
         
         <ImageButton

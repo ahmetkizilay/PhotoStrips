@@ -80,7 +80,9 @@ public class ViewImageActivity extends FragmentActivity {
                         File file = new File(mPicture.getPath());
                         file.delete();
 
-                        setResult(RESULT_CANCELED, new Intent());
+                        Intent resultIntent = new Intent();
+                        resultIntent.setData(mPicture);
+                        setResult(RESULT_OK, resultIntent);
                         finish();
                     }
 
@@ -113,8 +115,8 @@ public class ViewImageActivity extends FragmentActivity {
                 showAboutMe();
                 return true;
             case R.id.menu_gallery:
-                Intent galleryIntent = new Intent(this, GalleryActivity.class);
-                galleryIntent.setAction("com.ahmetkizilay.image.photostrips.GalleryActivity");
+                Intent galleryIntent = new Intent(this, AltGalleryActivity.class);
+                galleryIntent.setAction("com.ahmetkizilay.image.photostrips.AltGalleryActivity");
                 this.startActivity(galleryIntent);
                 return true;
             case R.id.menu_booth:

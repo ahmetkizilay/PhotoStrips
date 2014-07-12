@@ -43,7 +43,7 @@ public class PhotoCreator {
 			
 			Matrix thumbnailMatrix = new Matrix();
 			thumbnailMatrix.postScale(scaleFactor, scaleFactor);
-			if (!isPortrait)
+			if (isPortrait)
 				thumbnailMatrix.postRotate(-90f);
 
 			Bitmap thumbnailPicture = Bitmap.createBitmap(photoBM, 0, 0,
