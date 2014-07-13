@@ -455,6 +455,10 @@ public class PhotoBoothActivity extends FragmentActivity {
 			public void run() {
 				if (mCamera == null) {
 					mCamera = getCameraInstance();
+                    if(mCamera == null) {
+                        //Toast.makeText(PhotoBoothActivity.this, "Could not connect to the camera", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
 					int result = getCameraRotation();
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
@@ -17,10 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
@@ -59,6 +62,11 @@ public class AltGalleryActivity extends FragmentActivity {
         this.lvGallery = (ListView) findViewById(R.id.lvGallery);
         this.mGalleryItemAdapter = new GalleryItemAdapter(this, this.home_directory_string);
         this.lvGallery.setAdapter(this.mGalleryItemAdapter);
+
+        TextView twEmptyGallery = (TextView) findViewById(R.id.twEmptyGallery);
+        if(this.mGalleryItemAdapter.getCount() != 0) {
+            twEmptyGallery.setVisibility(View.GONE);
+        }
 	}
 
 	@Override

@@ -3,13 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <com.ahmetkizilay.image.photostrips.utils.TouchImageView
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="58dp"/>
+        />
 
     <ImageButton
         android:id="@+id/btnShare"
@@ -42,7 +44,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="60dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="4dp"
         app:intent_data_type="image/*"
         app:intent_name="android.intent.action.SEND"
         app:max_initial_items="4"

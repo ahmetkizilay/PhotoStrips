@@ -131,7 +131,7 @@ public class GalleryItemAdapter extends BaseAdapter {
         });
 
         if (photos == null || photos.length < 1) {
-            return null;
+            return new String[0];
         }
 
         Arrays.sort(photos, new Comparator<File>() {

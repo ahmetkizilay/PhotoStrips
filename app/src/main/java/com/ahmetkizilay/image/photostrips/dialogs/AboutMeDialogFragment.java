@@ -27,19 +27,20 @@ public class AboutMeDialogFragment extends DialogFragment{
 				.setCancelable(false)
 				.setTitle("PhotoStrips")
 				.setIcon(R.drawable.ic_photostrips)
-				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				.setNeutralButton("DONATE", new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
 					}
-				}).setPositiveButton("FOLLOW ME", new DialogInterface.OnClickListener() {
+				})
+                .setPositiveButton("RATE ME", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int which) {
 
-					public void onClick(DialogInterface dialog, int which) {
-						Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mobile.twitter.com/ahmetkizilay"));				
-						startActivity(twitterIntent);	
-					}
-				});
+                       Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getActivity().getPackageName()));
+                       startActivity(rateIntent);
+                   }
+                });
 		return builder.create();
 	}
 }
