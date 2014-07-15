@@ -22,7 +22,9 @@
         android:id="@+id/loGalleryWaitScreen"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center" android:background="#66eeeeee" android:orientation="vertical" >
+        android:gravity="center"
+        android:background="#66eeeeee"
+        android:orientation="vertical" >
 
         <ProgressBar
             android:id="@+id/pbWait"
