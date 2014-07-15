@@ -1,6 +1,8 @@
 package com.ahmetkizilay.image.photostrips.dialogs;
 
 import com.ahmetkizilay.image.photostrips.R;
+import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
+import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 public class AboutMeDialogFragment extends DialogFragment{
 	
@@ -31,7 +35,9 @@ public class AboutMeDialogFragment extends DialogFragment{
 
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-
+                        if(mCallback != null) {
+                            mCallback.onDonationsRequested();
+                        }
 					}
 				})
                 .setPositiveButton("RATE ME", new DialogInterface.OnClickListener() {
@@ -43,4 +49,15 @@ public class AboutMeDialogFragment extends DialogFragment{
                 });
 		return builder.create();
 	}
+
+    private RequestListener mCallback;
+
+    public void setRequestListener(RequestListener callback) {
+        this.mCallback = callback;
+    }
+
+    public interface RequestListener {
+        public void onDonationsRequested();
+    }
+
 }

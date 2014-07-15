@@ -12,6 +12,7 @@ import java.util.Locale;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
@@ -23,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
@@ -54,6 +56,8 @@ import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.CompletionDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.PhotoCreationDialogFragment;
 import com.ahmetkizilay.image.photostrips.utils.OnDoubleTapListener;
+import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
+import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
 public class PhotoBoothActivity extends FragmentActivity {
 
@@ -155,6 +159,10 @@ public class PhotoBoothActivity extends FragmentActivity {
 		mActionBarHelper.onCreate(savedInstanceState);
 
 		setContentView(R.layout.booth);
+
+        Configuration config = getResources().getConfiguration();
+        if (config.locale == null)
+            config.locale = Locale.getDefault();
 
 		try {
 			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -712,9 +720,23 @@ public class PhotoBoothActivity extends FragmentActivity {
 		rel.startAnimation(anim);
 
 	}
-	
-	
-	/* ******************BEGIN SORT OF UTILITY FUNCTIONS *************** */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // pass the request back to the fragment
+        if(requestCode == PaymentDialogFragment.PAYMENT_RESULT_CODE) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentByTag("frag-donations");
+            if (fragment != null)
+            {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    /* ******************BEGIN SORT OF UTILITY FUNCTIONS *************** */
 	
 	/***
 	 * reverts Views to their default states.
@@ -805,10 +827,31 @@ public class PhotoBoothActivity extends FragmentActivity {
 	}
 
 	private void showAboutMe() {
-		DialogFragment newFragment = AboutMeDialogFragment.newInstance();
+		AboutMeDialogFragment newFragment = AboutMeDialogFragment.newInstance();
+        newFragment.setRequestListener(new AboutMeDialogFragment.RequestListener() {
+            public void onDonationsRequested() {
+                showDonationDialog();
+            }
+        });
 		newFragment.show(getSupportFragmentManager(), "dialog");
 	}
-		
+
+    private void showDonationDialog() {
+        final PaymentDialogFragment newFragment = PaymentDialogFragment.getInstance(R.array.product_ids);
+        newFragment.setPaymentCompletedListener(new PaymentDialogFragment.PaymentCompletedListener() {
+            public void onPaymentCompleted() {
+                newFragment.dismiss();
+                showThankYouDialog();
+            }
+        });
+        newFragment.show(getSupportFragmentManager(), "frag-donations");
+    }
+
+    private void showThankYouDialog() {
+        final ThankYouDialogFragment newFragment = ThankYouDialogFragment.newInstance();
+        newFragment.show(getSupportFragmentManager(), "frag-thanks");
+    }
+
 	private void showPhotoCreationDialog() {
 
 		FragmentManager fm = getSupportFragmentManager();

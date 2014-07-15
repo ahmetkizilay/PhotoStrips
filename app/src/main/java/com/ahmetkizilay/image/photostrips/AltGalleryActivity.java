@@ -2,6 +2,7 @@ package com.ahmetkizilay.image.photostrips;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,7 +10,9 @@ import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -31,12 +34,15 @@ import com.ahmetkizilay.image.photostrips.utils.CustomHorizontalScrollView;
 import com.ahmetkizilay.image.photostrips.utils.CustomHorizontalScrollView.OnScrollStoppedListener;
 import com.ahmetkizilay.image.photostrips.utils.CustomHorizontalScrollView.ScrollStoppedEvent;
 import com.ahmetkizilay.image.photostrips.utils.GalleryItemAdapter;
+import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
+import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 
 public class AltGalleryActivity extends FragmentActivity {
 	// using this for faking an action bar for earlier versions of android.
@@ -57,6 +63,10 @@ public class AltGalleryActivity extends FragmentActivity {
 		mActionBarHelper.onCreate(savedInstanceState);
 
 		setContentView(R.layout.port_gallery);
+
+        Configuration config = getResources().getConfiguration();
+        if (config.locale == null)
+            config.locale = Locale.getDefault();
 
         this.home_directory_string = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "perisonic" + File.separator + "image" + File.separator + "photostrips";
         this.lvGallery = (ListView) findViewById(R.id.lvGallery);
@@ -85,10 +95,31 @@ public class AltGalleryActivity extends FragmentActivity {
 		}
 	}
 
-	private void showAboutMe() {
-		DialogFragment newFragment = AboutMeDialogFragment.newInstance();
-		newFragment.show(getSupportFragmentManager(), "dialog");
-	}
+    private void showAboutMe() {
+        AboutMeDialogFragment newFragment = AboutMeDialogFragment.newInstance();
+        newFragment.setRequestListener(new AboutMeDialogFragment.RequestListener() {
+            public void onDonationsRequested() {
+                showDonationDialog();
+            }
+        });
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void showDonationDialog() {
+        final PaymentDialogFragment newFragment = PaymentDialogFragment.getInstance(R.array.product_ids);
+        newFragment.setPaymentCompletedListener(new PaymentDialogFragment.PaymentCompletedListener() {
+            public void onPaymentCompleted() {
+                newFragment.dismiss();
+                showThankYouDialog();
+            }
+        });
+        newFragment.show(getSupportFragmentManager(), "frag-donations");
+    }
+
+    private void showThankYouDialog() {
+        final ThankYouDialogFragment newFragment = ThankYouDialogFragment.newInstance();
+        newFragment.show(getSupportFragmentManager(), "frag-thanks");
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -96,6 +127,16 @@ public class AltGalleryActivity extends FragmentActivity {
             if(resultCode == RESULT_OK) {
                 this.mGalleryItemAdapter.removeItem(data.getData().getPath());
                 this.mGalleryItemAdapter.notifyDataSetChanged();
+            }
+        }
+
+        // pass the request back to the fragment
+        if(requestCode == PaymentDialogFragment.PAYMENT_RESULT_CODE) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentByTag("frag-donations");
+            if (fragment != null)
+            {
+                fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }
