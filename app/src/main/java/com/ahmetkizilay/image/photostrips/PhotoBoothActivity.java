@@ -91,6 +91,39 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 	private DialogFragment photoCreationFragment;
 
+    // timer mode vs demand mode
+    // timer mode is when capturing is done automatically with a timer
+    // demand mode is when user taps the capture button to take photographs
+    private boolean mIsTimerMode = true;
+
+    /***
+     * This method is called after taking a picture in onDemand mode.
+     * Stores the image and holds a reference to its location in photoParts array
+     */
+    private PictureCallback demandModePictureTakenCallback = new PictureCallback() {
+        public void onPictureTaken(byte[] data, Camera camera) {
+            File pictureFile = getFileForImage(true);
+            if (pictureFile == null) {
+                Log.d("", "Error creating file");
+                return;
+            }
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                fos.write(data);
+                fos.close();
+            } catch (Exception exp) {
+                Log.d("", "Error: " + exp.getMessage());
+            }
+
+            photoParts.add(pictureFile.getAbsolutePath());
+            camera.startPreview();
+
+            if(photoCount == 4) {
+                showPhotoCreationDialog();
+            }
+        }
+    };
 
 	/***
 	 *  callback function that runs after a photo is taken.
@@ -240,22 +273,41 @@ public class PhotoBoothActivity extends FragmentActivity {
 		twPhotoCount[3] = (TextView) findViewById(R.id.tw4);
 
 		captureButton = (Button) findViewById(R.id.button_capture);
+        captureButton.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View view) {
+                if(!mIsTimerMode) {
+                    if(isCapturing) {
+                        isCapturing = false;
+                        cancelCapturing(true);
+                    }
+                    else {
+                        prepareForCapture();
+                    }
+                }
+                return true;
+            }
+        });
 		captureButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (!isCapturing) {
-					isCapturing = true;
-					photoCount = 0;
-					photoParts.clear();
-					finalImagePath = null;
-					
-					captureButton.setBackgroundResource(R.drawable.roundedbutton_capturing);
-					
-					takeMyPicture();
 
-				} else {
-					revertControls(true);
-				}
+                if(!mIsTimerMode) {
+                    if(isCapturing) {
+                        demandModeTakeMyPicture();
+                    }
+                    else {
+                        Toast.makeText(PhotoBoothActivity.this, "Long Press to start session", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    if (!isCapturing) {
+                        prepareForCapture();
+                        takeMyPicture();
+
+                    } else {
+                        cancelCapturing(true);
+                    }
+                }
 			}
 		});
 
@@ -318,6 +370,25 @@ public class PhotoBoothActivity extends FragmentActivity {
 			}
 
 		});
+
+        // switches between timer mode and on demand mode
+        final ImageButton btnSwitchMode = (ImageButton) findViewById(R.id.btnSwitchMode);
+        btnSwitchMode.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                if(!isCapturing) {
+                    if(mIsTimerMode) {
+                        mIsTimerMode = false;
+                        btnSwitchMode.setBackgroundResource(R.drawable.unselectedbutton);
+                        Toast.makeText(PhotoBoothActivity.this, "Demand Mode: long press to start/stop session", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        mIsTimerMode = true;
+                        btnSwitchMode.setBackgroundResource(R.drawable.selectedbutton);
+                        Toast.makeText(PhotoBoothActivity.this, "Timer Mode: press to start/stop capturing", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
 		RelativeLayout relLayout = (RelativeLayout) findViewById(R.id.loSettings);
 		relLayout.setVisibility(View.VISIBLE);
@@ -420,9 +491,8 @@ public class PhotoBoothActivity extends FragmentActivity {
 
         removePreview();
 
-
 		if (isCapturing) {
-			revertControls(true);
+			cancelCapturing(true);
 		}
 
         if (mpOne != null) {
@@ -438,7 +508,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 			showAboutMe();
 			return true;
 		case R.id.menu_gallery:
-			if(isCapturing) revertControls(true);
+			if(isCapturing) cancelCapturing(true);
 			
 			Intent switchViewIntent = new Intent(this, AltGalleryActivity.class);
 			switchViewIntent.setAction("com.ahmetkizilay.image.photostrips.AltGalleryActivity");
@@ -452,7 +522,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
-			revertControls(isCapturing);
+			cancelCapturing(isCapturing);
 		}
 
 		return super.onKeyDown(keyCode, event);
@@ -596,7 +666,23 @@ public class PhotoBoothActivity extends FragmentActivity {
 		
 		t.start();
 	}
-	
+
+    private void demandModeTakeMyPicture() {
+
+        new Thread(new Runnable() {
+            public void run() {
+                changePhotoCountFontColor(photoCount, Color.RED);
+                photoCount += 1;
+
+                mCamera.takePicture(isSoundOn ? new Camera.ShutterCallback() {
+                    public void onShutter() {
+                    }
+                } : null, null, demandModePictureTakenCallback);
+
+            }
+        }).start();
+    }
+
 	/***
 	 * method for taking pictures. starts the process as a separate thread.
 	 * takes a picture and the camera callback recursively triggers this method again for the next picture.
@@ -673,12 +759,11 @@ public class PhotoBoothActivity extends FragmentActivity {
 				String newFilePath = getFileForImage(false).getAbsolutePath();
 				boolean isSuccess = PhotoCreator.prepareFinalImage(photoParts, isCameraFrontFacing, isPortaitView, newFilePath);
 				if(isSuccess) finalImagePath = newFilePath;
-				revertControls(false);
+				cancelCapturing(false);
 				hidePhotoCreationDialog(isSuccess);
 			}
 		});
 		t.start();
-
 	}
 	
 	/***
@@ -737,12 +822,24 @@ public class PhotoBoothActivity extends FragmentActivity {
     }
 
     /* ******************BEGIN SORT OF UTILITY FUNCTIONS *************** */
-	
+
+    /***
+     * called when capturing is enabled.
+     * clearing variables for storing photo parts
+     */
+    private void prepareForCapture() {
+        isCapturing = true;
+        photoCount = 0;
+        photoParts.clear();
+        finalImagePath = null;
+
+        captureButton.setBackgroundResource(R.drawable.roundedbutton_capturing);
+    }
 	/***
 	 * reverts Views to their default states.
 	 * @param true if photo capture is cancelled
 	 */
-	private void revertControls(boolean cancelled) {
+	private void cancelCapturing(boolean cancelled) {
 		isCapturing = false;
 
 		changePhotoCountFontColor(0, Color.WHITE);
@@ -821,7 +918,12 @@ public class PhotoBoothActivity extends FragmentActivity {
 	public void positiveCompletionCallback() {
 		showPicture(finalImagePath);
 	}
-	
+
+    /***
+     * interface implementation method for CompletionDialogFragment
+     * This method is called immediately from the fragment which acts as a wait animation
+     * while the final image is prepared by the activity
+     */
 	public void onPhotoCreationDialogCreated() {
 		prepareFinalImage();
 	}
