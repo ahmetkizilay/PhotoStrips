@@ -36,6 +36,28 @@
         android:background="@drawable/settingspanel"
         />
 
+    <ImageButton
+        android:id="@+id/btnRotateRight"
+        android:layout_gravity="top|end"
+        android:src="@drawable/action_rotateright"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/settingspanel"
+        />
+
+    <ImageButton
+        android:id="@+id/btnRotateLeft"
+        android:layout_gravity="top|end"
+        android:src="@drawable/action_rotateleft"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="72dp"
+        android:background="@drawable/settingspanel"
+        />
+
     <com.ahmetkizilay.modules.listapps.AppListerViewGroup
         android:id="@+id/wgAppListerBottom"
         android:layout_width="match_parent"
@@ -49,5 +71,7 @@
         app:intent_name="android.intent.action.SEND"
         app:max_initial_items="4"
         android:visibility="invisible"/>
+
+
 
 </FrameLayout>

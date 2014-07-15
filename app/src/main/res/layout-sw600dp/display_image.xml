@@ -4,14 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#000000" android:id="@+id/myLayout">
 
     <com.ahmetkizilay.image.photostrips.utils.TouchImageView
         android:id="@+id/img"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="58dp"
-        android:background="#000000"/>
+        android:layout_marginTop="58dp"/>
 
     <com.ahmetkizilay.modules.listapps.AppListerViewGroup
         android:id="@+id/wgAppListerBottom"
@@ -45,6 +44,28 @@
         android:layout_height="64dp"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
+        android:background="@drawable/settingspanel"
+        />
+
+    <ImageButton
+        android:id="@+id/btnRotateRight"
+        android:layout_gravity="top|end"
+        android:src="@drawable/action_rotateright"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/settingspanel"
+        />
+
+    <ImageButton
+        android:id="@+id/btnRotateLeft"
+        android:layout_gravity="top|end"
+        android:src="@drawable/action_rotateleft"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="88dp"
         android:background="@drawable/settingspanel"
         />
 

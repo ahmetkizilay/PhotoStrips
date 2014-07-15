@@ -2,18 +2,37 @@ package com.ahmetkizilay.image.photostrips;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.RotateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
@@ -32,6 +51,8 @@ public class ViewImageActivity extends FragmentActivity {
 
     private AppListerViewGroup wgSharePanel;
     private Uri mPicture;
+    private Bitmap bmPicture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +64,42 @@ public class ViewImageActivity extends FragmentActivity {
 
         Intent intent = getIntent();
         this.mPicture = Uri.parse(intent.getDataString());
+        this.bmPicture = BitmapFactory.decodeFile(this.mPicture.getPath());
 
         setContentView(R.layout.display_image);
 
+
         final TouchImageView touchImageView = (TouchImageView) findViewById(R.id.img);
-        touchImageView.setImageURI(this.mPicture);
+        touchImageView.setImageBitmap(this.bmPicture);
+        touchImageView.setMaxZoom(5.0f);
+
+        ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotateRight);
+        btnRotate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+
+                bmPicture = Bitmap.createScaledBitmap(bmPicture, bmPicture.getWidth(), bmPicture.getHeight(),true);
+                bmPicture = Bitmap.createBitmap(bmPicture, 0, 0, bmPicture.getWidth(), bmPicture.getHeight(), matrix, true);
+
+                touchImageView.setImageBitmap(bmPicture);
+            }
+        });
+
+        ImageButton btnRotateLeft = (ImageButton) findViewById(R.id.btnRotateLeft);
+        btnRotateLeft.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                Matrix matrix = new Matrix();
+                matrix.postRotate(-90);
+
+                bmPicture = Bitmap.createScaledBitmap(bmPicture, bmPicture.getWidth(), bmPicture.getHeight(),true);
+                bmPicture = Bitmap.createBitmap(bmPicture, 0, 0, bmPicture.getWidth(), bmPicture.getHeight(), matrix, true);
+
+                touchImageView.setImageBitmap(bmPicture);
+            }
+        });
 
         this.wgSharePanel = (AppListerViewGroup) findViewById(R.id.wgAppListerBottom);
         this.wgSharePanel.setListItemClickedListener(new AppListerViewGroup.ListItemClickedListener() {
@@ -213,4 +265,17 @@ public class ViewImageActivity extends FragmentActivity {
     }
 	/* ********* END METHODS RELATED TO THE ACTION BAR ********************** */
 
+    private float getScreenRatio() {
+        Point size = new Point();
+        WindowManager w = getWindowManager();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2){
+            w.getDefaultDisplay().getSize(size);
+            return (float)size.y / (float)size.x;
+        }else{
+            Display d = w.getDefaultDisplay();
+            //noinspection deprecation
+            return (float)d.getHeight() / (float)d.getWidth();
+        }
+    }
 }
