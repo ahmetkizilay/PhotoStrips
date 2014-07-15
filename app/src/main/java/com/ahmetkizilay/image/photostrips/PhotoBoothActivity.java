@@ -124,22 +124,25 @@ public class PhotoBoothActivity extends FragmentActivity {
 	final Runnable postCameraInit = new Runnable() {
 
 		public void run() {
-			mPreview = new CameraPreview(PhotoBoothActivity.this, mCamera);
-			mPreview.setOnTouchListener(null);
-			mPreview.setOnTouchListener(new OnDoubleTapListener() {
-				public void onDoubleTap() {
 
-					PhotoBoothActivity.this.runOnUiThread(new Runnable() {
+            removePreview();
 
-						public void run() {
-							toggleActionBar();
-							toggleSettingsBar();
-						}
-					});
-				}
-			});
+            mPreview = new CameraPreview(PhotoBoothActivity.this, mCamera);
+            mPreview.setOnTouchListener(null);
+            mPreview.setOnTouchListener(new OnDoubleTapListener() {
+                public void onDoubleTap() {
 
-			FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+                    PhotoBoothActivity.this.runOnUiThread(new Runnable() {
+
+                        public void run() {
+                            toggleActionBar();
+                            toggleSettingsBar();
+                        }
+                    });
+                }
+            });
+
+			FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
 			preview.addView(mPreview, 0);
 		}
 	};
@@ -323,8 +326,8 @@ public class PhotoBoothActivity extends FragmentActivity {
 		loParams.height = loHeight;
 		bottomBlur.setLayoutParams(loParams);
 
-		// Thread.setDefaultUncaughtExceptionHandler(new
-		// CustomUncaughtExceptionHandler());
+		Thread.setDefaultUncaughtExceptionHandler(new
+		 CustomUncaughtExceptionHandler());
 
 	}
 	
@@ -338,6 +341,10 @@ public class PhotoBoothActivity extends FragmentActivity {
 		if (mCamera == null) {
 			initCamera();
 		}
+
+        if(mpOne == null) {
+            mpOne = MediaPlayer.create(getApplicationContext(), R.raw.one_wav);
+        }
 
 	}
 	
@@ -385,21 +392,35 @@ public class PhotoBoothActivity extends FragmentActivity {
 		}
 		if (mpOne != null) {
 			mpOne.release();
+            mpOne = null;
 		}
+
+        removePreview();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (mCamera != null) {
+
+        if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.setPreviewCallback(null);
 			mCamera.release();
+
 			mCamera = null;
 		}
+
+        removePreview();
+
+
 		if (isCapturing) {
 			revertControls(true);
 		}
+
+        if (mpOne != null) {
+            mpOne.release();
+            mpOne = null;
+        }
 	}
 	
 	@Override
@@ -430,11 +451,23 @@ public class PhotoBoothActivity extends FragmentActivity {
 	}
 
 
+    private void removePreview() {
+        if (mPreview != null) {
+            mPreview.setOnTouchListener(null);
+            mPreview.clearAnimation();
+
+            FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
+            preview.removeView(mPreview);
+
+            mPreview = null;
+        }
+    }
 	/***
 	 * Method for initializing the camera, and the camera preview.
 	 * Initialization takes place in a separate thread to prevent UI blocking.
 	 */
 	private void initCamera() {
+
 		if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.setPreviewCallback(null);
@@ -442,13 +475,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 			mCamera = null;
 		}
 
-		if (mPreview != null) {
-			mPreview.setOnTouchListener(null);
-			mPreview.clearAnimation();
-			FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-			preview.removeView(mPreview);
-			mPreview = null;
-		}
+        removePreview();
 
 		Thread t = new Thread(new Runnable() {
 
@@ -464,14 +491,15 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 					Parameters params = mCamera.getParameters();
 
-					Size previewSize = getMostSuitablePreviewSize(params.getSupportedPreviewSizes());
-
+					//Size previewSize = getMostSuitablePreviewSize(params.getSupportedPreviewSizes());
+                    Size previewSize = params.getPreviewSize();
 					if (result == 90 || result == 270) {
 						params.setPreviewSize(previewSize.width, previewSize.height);
 					} else {
 						params.setPreviewSize(previewSize.height, previewSize.width);
 					}
 
+                    params.setZoom(0);
 					mCamera.setParameters(params);
 					mCamera.setDisplayOrientation(result);
 
@@ -547,7 +575,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 				for (int i = 1, iLen = sizes.size(); i < iLen; i++) {
 					Size thisSize = sizes.get(i);
 					float thisRatio = (float) thisSize.height / (float) thisSize.height;
-					if (Math.abs(thisRatio - ratio) < closestRatio && thisSize.height > resultSize.height) {
+					if (Math.abs(thisRatio - ratio) < Math.abs(closestRatio - ratio) && thisSize.height > resultSize.height) {
 						closestRatio = thisRatio;
 						resultSize = thisSize;
 					}
