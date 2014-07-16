@@ -570,7 +570,11 @@ public class PhotoBoothActivity extends FragmentActivity {
 					Parameters params = mCamera.getParameters();
 
 					//Size previewSize = getMostSuitablePreviewSize(params.getSupportedPreviewSizes());
-                    Size previewSize = params.getPreviewSize();
+
+                    FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
+
+                    Size previewSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(), preview.getMeasuredWidth(), preview.getMeasuredHeight());
+                    //Size previewSize = params.getPreviewSize();
 					if (result == 90 || result == 270) {
 						params.setPreviewSize(previewSize.width, previewSize.height);
 					} else {
@@ -641,26 +645,42 @@ public class PhotoBoothActivity extends FragmentActivity {
 			}
 			
 			/***
-			 * selects the most suitable preview size, based on the available preview sizes and the screen size
-			 * @param sizes
+			 * selects the most suitable preview size, based on the available preview sizes and the width/height of the container
+             * method taken from: http://stackoverflow.com/a/19592492/210391
+			 * @param sizes, width, height
 			 * @return the most suitable preview size
 			 */
-			private Size getMostSuitablePreviewSize(List<Size> sizes) {
-				float ratio = (float) disp_height / (float) disp_width;
+            private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
+                final double ASPECT_TOLERANCE = 0.1;
+                double targetRatio=(double)h / w;
 
-				Size resultSize = sizes.get(0);
-				float closestRatio = (float) resultSize.height / (float) resultSize.height;
-				for (int i = 1, iLen = sizes.size(); i < iLen; i++) {
-					Size thisSize = sizes.get(i);
-					float thisRatio = (float) thisSize.height / (float) thisSize.height;
-					if (Math.abs(thisRatio - ratio) < Math.abs(closestRatio - ratio) && thisSize.height > resultSize.height) {
-						closestRatio = thisRatio;
-						resultSize = thisSize;
-					}
-				}
+                if (sizes == null) return null;
 
-				return resultSize;
-			}
+                Camera.Size optimalSize = null;
+                double minDiff = Double.MAX_VALUE;
+
+                int targetHeight = h;
+
+                for (Camera.Size size : sizes) {
+                    double ratio = (double) size.width / size.height;
+                    if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+                    if (Math.abs(size.height - targetHeight) < minDiff) {
+                        optimalSize = size;
+                        minDiff = Math.abs(size.height - targetHeight);
+                    }
+                }
+
+                if (optimalSize == null) {
+                    minDiff = Double.MAX_VALUE;
+                    for (Camera.Size size : sizes) {
+                        if (Math.abs(size.height - targetHeight) < minDiff) {
+                            optimalSize = size;
+                            minDiff = Math.abs(size.height - targetHeight);
+                        }
+                    }
+                }
+                return optimalSize;
+            }
 
 		});
 		
