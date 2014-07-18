@@ -57,6 +57,7 @@ public class AltGalleryActivity extends FragmentActivity {
         if(this.mGalleryItemAdapter.getCount() != 0) {
             twEmptyGallery.setVisibility(View.GONE);
         }
+
 	}
 
 	@Override

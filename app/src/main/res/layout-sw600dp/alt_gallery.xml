@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="52dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="4dp"
+    android:id="@+id/loGallery">
 
     <GridView
         android:layout_width="fill_parent"
