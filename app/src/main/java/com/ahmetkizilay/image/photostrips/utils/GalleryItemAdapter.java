@@ -80,7 +80,7 @@ public class GalleryItemAdapter extends BaseAdapter {
         return i;
     }
 
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View view, ViewGroup viewGroup) {
 
         ViewHolder holder;
 
@@ -116,7 +116,7 @@ public class GalleryItemAdapter extends BaseAdapter {
         final HorizontalScrollView hScrollView = (HorizontalScrollView) view;
         hScrollView.postDelayed(new Runnable() {
             public void run() {
-                hScrollView.smoothScrollBy(20 + (int) Math.floor(Math.random() * 200.0f), 0);
+                hScrollView.fullScroll(position % 2 == 0 ? CustomHorizontalScrollView.FOCUS_RIGHT : CustomHorizontalScrollView.FOCUS_LEFT);
             }
         }, 10);
 
