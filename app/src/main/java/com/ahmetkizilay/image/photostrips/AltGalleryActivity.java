@@ -27,9 +27,6 @@ public class AltGalleryActivity extends FragmentActivity {
 	// using this for faking an action bar for earlier versions of android.
 	final ActionBarHelper mActionBarHelper = ActionBarHelper.createInstance(this);
 
-	private int disp_height;
-	private int disp_width;
-	
 	private String home_directory_string = "";
 
     private GridView lvGallery;

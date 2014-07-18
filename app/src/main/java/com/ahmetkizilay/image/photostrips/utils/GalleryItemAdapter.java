@@ -49,10 +49,10 @@ public class GalleryItemAdapter extends BaseAdapter {
 
         mPortraitMode = disp_width < disp_height;
         if(mPortraitMode) {
-            mDefaultThumbSize = disp_width + 50;
+            mDefaultThumbSize = disp_width + 100;
         }
         else {
-            mDefaultThumbSize = (disp_width / 2) + 50;
+            mDefaultThumbSize = (disp_width / 2) + 100;
         }
     }
 
