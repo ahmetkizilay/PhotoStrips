@@ -37,7 +37,8 @@ public class GalleryActivity extends FragmentActivity {
 
 	private int disp_height;
 	private int disp_width;
-	
+	private int mDefaultThumbSize;
+
 	private String home_directory_string = "";
 	private int numberOfPhotosDisplayed = 0;
 	private int totalNumberOfPhotos;
@@ -58,6 +59,7 @@ public class GalleryActivity extends FragmentActivity {
 		DisplayMetrics dispMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dispMetrics);
 
+        mDefaultThumbSize = (int) (getResources().getDisplayMetrics().density * 196 + 0.5f);
 		disp_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.heightPixels, dispMetrics);
 		disp_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.widthPixels, dispMetrics);
 
@@ -151,7 +153,7 @@ public class GalleryActivity extends FragmentActivity {
 		String thumbLocation = PhotoCreator.getThumbnailLocation(photo);
 		File thumbFile = new File(thumbLocation);
 		if (!thumbFile.exists()) {
-			if (PhotoCreator.createThumbnail(photo, disp_height + 50)) {
+			if (PhotoCreator.createThumbnail(photo, mDefaultThumbSize)) {
 				thumbFile = new File(thumbLocation);
 			} else {
 				// TODO take care of this

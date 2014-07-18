@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingTop="52dp"
+    android:paddingBottom="4dp">
 
-    <ListView
+    <GridView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/lvGallery"
+        android:numColumns="2"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"/>
+        android:layout_marginBottom="0dp"
+        android:verticalSpacing="4dp"
+        android:horizontalSpacing="8dp"/>
 
     <TextView
         android:id="@+id/twEmptyGallery"
@@ -21,5 +24,4 @@
         android:layout_gravity="center"
         android:text="No Photos Yet!"
         android:textSize="24dp"/>
-
 </FrameLayout>
