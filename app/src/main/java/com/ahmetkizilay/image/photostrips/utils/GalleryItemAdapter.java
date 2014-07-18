@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
 import com.ahmetkizilay.image.photostrips.PhotoCreator;
@@ -114,6 +115,13 @@ public class GalleryItemAdapter extends BaseAdapter {
                 GalleryItemAdapter.this.context.startActivityForResult(showPicIntent, 0);
             }
         });
+
+        final HorizontalScrollView hScrollView = (HorizontalScrollView) view;
+        hScrollView.postDelayed(new Runnable() {
+            public void run() {
+                hScrollView.smoothScrollBy(20 + (int) Math.floor(Math.random() * 200.0f), 0);
+            }
+        }, 10);
 
         return view;
     }
