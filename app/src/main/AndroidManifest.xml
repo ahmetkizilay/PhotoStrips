@@ -27,18 +27,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ahmetkizilay.image.photostrips.GalleryActivity"
-            android:label="@string/app_name" 
-            android:screenOrientation="landscape">
-            <intent-filter>
-               <!-- <action android:name="android.intent.action.MAIN" />-->
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="com.ahmetkizilay.image.photostrips.AltGalleryActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:label="@string/app_name">
             <intent-filter>
                 <!-- <action android:name="android.intent.action.MAIN" />-->
                 <category android:name="android.intent.category.LAUNCHER" />

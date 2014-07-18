@@ -14,15 +14,31 @@ import android.util.Log;
 
 public class PhotoCreator {
 		
-	public static String getThumbnailLocation(File photo) {
-		return photo.getParent() + File.separator + ".thumb" + File.separator + "." + photo.getName();
+	public static String getThumbnailLocation(File photo, boolean isPortaitMode) {
+		return photo.getParent() + File.separator + ".thumb-" + (isPortaitMode ? "port" : "land") + File.separator + "." + photo.getName();
 	}
-	public static boolean createThumbnail(File photo, int targetDisplayWidth) {
-		String thumbLocation = getThumbnailLocation(photo);	
+
+    public static Bitmap getThumbnailBM(File photo, int targetDisplayWidth, boolean isPortaitMode) {
+        String thumbnailLocation = getThumbnailLocation(photo, isPortaitMode);
+        File thumbnailFile = new File(thumbnailLocation);
+        if(thumbnailFile.exists()) {
+            Bitmap bmThumbnail = BitmapFactory.decodeFile(thumbnailLocation);
+            if(bmThumbnail.getWidth() != targetDisplayWidth) {
+                return createThumbnail(photo, targetDisplayWidth, isPortaitMode);
+            }
+            return bmThumbnail;
+        }
+        else {
+            return createThumbnail(photo, targetDisplayWidth, isPortaitMode);
+        }
+    }
+
+	public static Bitmap createThumbnail(File photo, int targetDisplayWidth, boolean isPortraitMode) {
+		String thumbLocation = getThumbnailLocation(photo, isPortraitMode);
 		return createThumbnail(BitmapFactory.decodeFile(photo.getAbsolutePath()), targetDisplayWidth, thumbLocation);
 	}
 	
-	public static boolean createThumbnail(Bitmap photoBM, int targetDisplayWidth, String thumbLocation) {
+	public static Bitmap createThumbnail(Bitmap photoBM, int targetDisplayWidth, String thumbLocation) {
 		try {
 			boolean isPortrait = photoBM.getWidth() < photoBM
 					.getHeight();
@@ -30,17 +46,6 @@ public class PhotoCreator {
 					/ (float) (!isPortrait ? photoBM.getWidth()
 							: photoBM.getHeight());
 
-			if(isPortrait) {
-				if(((float) photoBM.getWidth() * scaleFactor) < 150f) {
-					scaleFactor = 150f / (float) photoBM.getWidth();
-				}				
-			}
-			else {
-				if(((float) photoBM.getHeight() * scaleFactor) < 150f) {
-					scaleFactor = 150f / (float) photoBM.getHeight();
-				}	
-			}
-			
 			Matrix thumbnailMatrix = new Matrix();
 			thumbnailMatrix.postScale(scaleFactor, scaleFactor);
 			if (isPortrait)
@@ -53,11 +58,11 @@ public class PhotoCreator {
 			thumbnailPicture.compress(CompressFormat.JPEG, 100,
 					new FileOutputStream(new File(thumbLocation)));
 			
-			return true;
+			return thumbnailPicture;
 		}
 		catch(Exception exp) {
 			exp.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 	

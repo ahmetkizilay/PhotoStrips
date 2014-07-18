@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
 import com.ahmetkizilay.image.photostrips.PhotoCreator;
@@ -32,8 +33,8 @@ public class GalleryItemAdapter extends BaseAdapter {
     private String[] mPhotos;
     private Activity context;
 
-    private int disp_height;
-    private int disp_width;
+    private int mDefaultThumbSize;
+    private boolean mPortraitMode;
 
     public GalleryItemAdapter(Activity context, String galleryDirectory) {
         this.context = context;
@@ -43,8 +44,16 @@ public class GalleryItemAdapter extends BaseAdapter {
         DisplayMetrics dispMetrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dispMetrics);
 
-        disp_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.heightPixels, dispMetrics);
-        disp_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.widthPixels, dispMetrics);
+        int disp_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.heightPixels, dispMetrics);
+        int disp_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.widthPixels, dispMetrics);
+
+        mPortraitMode = disp_width < disp_height;
+        if(mPortraitMode) {
+            mDefaultThumbSize = disp_width + 100;
+        }
+        else {
+            mDefaultThumbSize = (disp_width / 2) + 100;
+        }
     }
 
     public void removeItem(String photo) {
@@ -71,7 +80,7 @@ public class GalleryItemAdapter extends BaseAdapter {
         return i;
     }
 
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View view, ViewGroup viewGroup) {
 
         ViewHolder holder;
 
@@ -90,19 +99,8 @@ public class GalleryItemAdapter extends BaseAdapter {
         }
 
         final String photo = this.mPhotos[position];
-        File photoFile = new File(photo);
 
-        String thumbLocation = PhotoCreator.getThumbnailLocation(photoFile);
-        File thumbFile = new File(thumbLocation);
-        if (!thumbFile.exists()) {
-            if (PhotoCreator.createThumbnail(photoFile, disp_width + 100)) {
-                thumbFile = new File(thumbLocation);
-            } else {
-                // TODO take care of this
-            }
-        }
-
-        Bitmap thumbBM = BitmapFactory.decodeFile(thumbLocation);
+        Bitmap thumbBM = PhotoCreator.getThumbnailBM(new File(photo), mDefaultThumbSize, mPortraitMode);
         holder.img.setImageBitmap(thumbBM);
         holder.img.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -114,6 +112,13 @@ public class GalleryItemAdapter extends BaseAdapter {
                 GalleryItemAdapter.this.context.startActivityForResult(showPicIntent, 0);
             }
         });
+
+        final HorizontalScrollView hScrollView = (HorizontalScrollView) view;
+        hScrollView.postDelayed(new Runnable() {
+            public void run() {
+                hScrollView.fullScroll(position % 2 == 0 ? CustomHorizontalScrollView.FOCUS_RIGHT : CustomHorizontalScrollView.FOCUS_LEFT);
+            }
+        }, 10);
 
         return view;
     }

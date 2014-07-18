@@ -226,12 +226,27 @@ public class PhotoBoothActivity extends FragmentActivity {
 				throw new Exception("Could Not Create Directory!");
 			}
 
-			String thumb_directory_string = home_directory_string + File.separator + ".thumb";
-			File thumb_directory = new File(thumb_directory_string);
-			if (!thumb_directory.exists() && !thumb_directory.mkdirs()) {
-				Log.d("", "home directory could not be created!");
-				throw new Exception("Could Not Create Directory!");
-			}
+            // deleting .thumb directory for earlier installs
+            // or at least I find a feasible solution to thumbnail size problem
+            String thumb_directory_string = home_directory_string + File.separator + ".thumb";
+            File thumb_directory = new File(thumb_directory_string);
+            if (thumb_directory.exists()) {
+                thumb_directory.delete();
+            }
+
+            String thumb_land_directory_string = home_directory_string + File.separator + ".thumb-land";
+            File thumb_land_directory = new File(thumb_land_directory_string);
+            if (!thumb_land_directory.exists() && !thumb_land_directory.mkdirs()) {
+                Log.d("", "home directory could not be created!");
+                throw new Exception("Could Not Create Directory!");
+            }
+
+            String thumb_port_directory_string = home_directory_string + File.separator + ".thumb-port";
+            File thumb_port_directory = new File(thumb_port_directory_string);
+            if (!thumb_port_directory.exists() && !thumb_port_directory.mkdirs()) {
+                Log.d("", "home directory could not be created!");
+                throw new Exception("Could Not Create Directory!");
+            }
 
 		} catch (Exception exp) {
 			Toast.makeText(this, "Error During Initialization", Toast.LENGTH_LONG).show();
@@ -857,7 +872,7 @@ public class PhotoBoothActivity extends FragmentActivity {
     }
 	/***
 	 * reverts Views to their default states.
-	 * @param true if photo capture is cancelled
+	 * @param cancelled if photo capture is cancelled
 	 */
 	private void cancelCapturing(boolean cancelled) {
 		isCapturing = false;
