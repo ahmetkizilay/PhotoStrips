@@ -116,6 +116,7 @@ public class GalleryItemAdapter extends BaseAdapter {
         final HorizontalScrollView hScrollView = (HorizontalScrollView) view;
         hScrollView.postDelayed(new Runnable() {
             public void run() {
+                hScrollView.scrollBy(position % 2 == 0 ? -50 : 50, 0);
                 hScrollView.fullScroll(position % 2 == 0 ? CustomHorizontalScrollView.FOCUS_RIGHT : CustomHorizontalScrollView.FOCUS_LEFT);
             }
         }, 10);
