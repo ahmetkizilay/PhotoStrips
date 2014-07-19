@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.ahmetkizilay.image.photostrips.ViewImageActivity;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -34,26 +37,19 @@ public class GalleryItemAdapter extends BaseAdapter {
     private Activity context;
 
     private int mDefaultThumbSize;
-    private boolean mPortraitMode;
 
     public GalleryItemAdapter(Activity context, String galleryDirectory) {
         this.context = context;
         this.mGalleryDirectory = galleryDirectory;
         this.mPhotos = getFiles();
 
-        DisplayMetrics dispMetrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dispMetrics);
+        int[] screenDimensions = new int[2];
+        getRealSize(screenDimensions);
 
-        int disp_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.heightPixels, dispMetrics);
-        int disp_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dispMetrics.widthPixels, dispMetrics);
+        int disp_width = screenDimensions[0];
+        int disp_height = screenDimensions[1];
 
-        mPortraitMode = disp_width < disp_height;
-        if(mPortraitMode) {
-            mDefaultThumbSize = disp_width + 100;
-        }
-        else {
-            mDefaultThumbSize = (disp_width / 2) + 100;
-        }
+        mDefaultThumbSize = Math.min(disp_height, disp_width) + 100;
     }
 
     public void removeItem(String photo) {
@@ -100,7 +96,7 @@ public class GalleryItemAdapter extends BaseAdapter {
 
         final String photo = this.mPhotos[position];
 
-        Bitmap thumbBM = PhotoCreator.getThumbnailBM(new File(photo), mDefaultThumbSize, mPortraitMode);
+        Bitmap thumbBM = PhotoCreator.getThumbnailBM(new File(photo), mDefaultThumbSize);
         holder.img.setImageBitmap(thumbBM);
         holder.img.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -160,5 +156,33 @@ public class GalleryItemAdapter extends BaseAdapter {
         }
 
         return photoPaths;
+    }
+
+    private void getRealSize(int[] screenDimensions) {
+
+        DisplayMetrics dispMetrics = new DisplayMetrics();
+        Display display = context.getWindowManager().getDefaultDisplay();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            display.getRealMetrics(dispMetrics);
+            screenDimensions[0] = dispMetrics.widthPixels;
+            screenDimensions[1] = dispMetrics.heightPixels;
+        }
+        else {
+            // using reflection here
+            try {
+                Method mGetRawWidth = Display.class.getMethod("getRawWidth");
+                Method mGetRawHeight = Display.class.getMethod("getRawHeight");
+
+                screenDimensions[0] = (Integer) mGetRawWidth.invoke(display);
+                screenDimensions[1] = (Integer) mGetRawHeight.invoke(display);
+            }
+            catch(Exception exp) {
+                display.getMetrics(dispMetrics);
+
+                screenDimensions[0] = dispMetrics.widthPixels;
+                screenDimensions[1] = dispMetrics.heightPixels;
+            }
+        }
     }
 }

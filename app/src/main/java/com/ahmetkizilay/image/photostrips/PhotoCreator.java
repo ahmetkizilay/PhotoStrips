@@ -14,27 +14,27 @@ import android.util.Log;
 
 public class PhotoCreator {
 		
-	public static String getThumbnailLocation(File photo, boolean isPortaitMode) {
-		return photo.getParent() + File.separator + ".thumb-" + (isPortaitMode ? "port" : "land") + File.separator + "." + photo.getName();
+	public static String getThumbnailLocation(File photo) {
+		return photo.getParent() + File.separator + ".thumb" + File.separator + "." + photo.getName();
 	}
 
-    public static Bitmap getThumbnailBM(File photo, int targetDisplayWidth, boolean isPortaitMode) {
-        String thumbnailLocation = getThumbnailLocation(photo, isPortaitMode);
+    public static Bitmap getThumbnailBM(File photo, int targetDisplayWidth) {
+        String thumbnailLocation = getThumbnailLocation(photo);
         File thumbnailFile = new File(thumbnailLocation);
         if(thumbnailFile.exists()) {
             Bitmap bmThumbnail = BitmapFactory.decodeFile(thumbnailLocation);
             if(bmThumbnail.getWidth() != targetDisplayWidth) {
-                return createThumbnail(photo, targetDisplayWidth, isPortaitMode);
+                return createThumbnail(photo, targetDisplayWidth);
             }
             return bmThumbnail;
         }
         else {
-            return createThumbnail(photo, targetDisplayWidth, isPortaitMode);
+            return createThumbnail(photo, targetDisplayWidth);
         }
     }
 
-	public static Bitmap createThumbnail(File photo, int targetDisplayWidth, boolean isPortraitMode) {
-		String thumbLocation = getThumbnailLocation(photo, isPortraitMode);
+	public static Bitmap createThumbnail(File photo, int targetDisplayWidth) {
+		String thumbLocation = getThumbnailLocation(photo);
 		return createThumbnail(BitmapFactory.decodeFile(photo.getAbsolutePath()), targetDisplayWidth, thumbLocation);
 	}
 	

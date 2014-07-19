@@ -226,26 +226,25 @@ public class PhotoBoothActivity extends FragmentActivity {
 				throw new Exception("Could Not Create Directory!");
 			}
 
-            // deleting .thumb directory for earlier installs
-            // or at least I find a feasible solution to thumbnail size problem
             String thumb_directory_string = home_directory_string + File.separator + ".thumb";
             File thumb_directory = new File(thumb_directory_string);
-            if (thumb_directory.exists()) {
-                thumb_directory.delete();
+            if (!thumb_directory.exists() && !thumb_directory.mkdirs()) {
+                Log.d("", "home directory could not be created!");
+                throw new Exception("Could Not Create Directory!");
             }
+
+
 
             String thumb_land_directory_string = home_directory_string + File.separator + ".thumb-land";
             File thumb_land_directory = new File(thumb_land_directory_string);
-            if (!thumb_land_directory.exists() && !thumb_land_directory.mkdirs()) {
-                Log.d("", "home directory could not be created!");
-                throw new Exception("Could Not Create Directory!");
+            if (thumb_land_directory.exists()) {
+                thumb_land_directory.delete();
             }
 
             String thumb_port_directory_string = home_directory_string + File.separator + ".thumb-port";
             File thumb_port_directory = new File(thumb_port_directory_string);
-            if (!thumb_port_directory.exists() && !thumb_port_directory.mkdirs()) {
-                Log.d("", "home directory could not be created!");
-                throw new Exception("Could Not Create Directory!");
+            if (thumb_port_directory.exists()) {
+                thumb_port_directory.delete();
             }
 
 		} catch (Exception exp) {
