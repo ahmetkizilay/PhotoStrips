@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.ahmetkizilay.image.photostrips"
         minSdkVersion 9
-        targetSdkVersion 17
+        targetSdkVersion 19
         versionCode 7
         versionName '1.2.0'
         compileOptions {
