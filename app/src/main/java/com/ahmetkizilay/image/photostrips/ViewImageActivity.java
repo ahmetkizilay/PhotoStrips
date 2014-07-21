@@ -109,9 +109,10 @@ public class ViewImageActivity extends FragmentActivity {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
                 shareIntent.setType("image/*");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, mPicture);
+                shareIntent.putExtra(Intent.EXTRA_TITLE, "via PhotoStrips");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "via PhotoStrips");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "via PhotoStrips");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + mPicture.toString()));
                 shareIntent.setClassName(packageName, appName);
 
                 startActivity(shareIntent);
