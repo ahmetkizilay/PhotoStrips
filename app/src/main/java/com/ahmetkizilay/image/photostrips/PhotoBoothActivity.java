@@ -46,8 +46,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
@@ -55,6 +53,7 @@ import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.CompletionDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.PhotoCreationDialogFragment;
 import com.ahmetkizilay.image.photostrips.utils.OnDoubleTapListener;
+import com.ahmetkizilay.image.photostrips.utils.TransportViewGroup;
 import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
 import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
@@ -73,14 +72,17 @@ public class PhotoBoothActivity extends FragmentActivity {
 	List<String> photoParts = new ArrayList<String>();
 	private String finalImagePath = null;
 	private String home_directory_string = "";
+
+    /***
+     * The bottom panel
+     */
+    private TransportViewGroup loTransport;
 	
 	private int camId = 0;
 	private boolean isCameraFrontFacing = true;
 	Camera mCamera;
 	CameraPreview mPreview;
     ImageButton captureButton;
-
-	TextView[] twPhotoCount;
 
 	private ImageButton btnSound;
 	private MediaPlayer mpOne;
@@ -173,6 +175,7 @@ public class PhotoBoothActivity extends FragmentActivity {
                         public void run() {
                             toggleActionBar();
                             toggleSettingsBar();
+                            loTransport.toggle(400);
                         }
                     });
                 }
@@ -265,12 +268,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 		int loHeight = (int) ((float) (disp_height - disp_width - actionBarCompensation) * 0.5);
 
 		// Setting the positions for the views dynamically for better visual design
-		TableLayout loTransport = (TableLayout) findViewById(R.id.loTransport);
-//		FrameLayout.LayoutParams loTransportParams = new FrameLayout.LayoutParams(loTransport.getLayoutParams());
-//		loTransportParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, dispMetrics);
-//		loTransportParams.gravity = Gravity.BOTTOM;
-//		loTransportParams.setMargins(marg8dp, 0, marg8dp, Math.max(marg8dp, (int) ((float) (loHeight - loTransportParams.height) * 0.5)));
-//		loTransport.setLayoutParams(loTransportParams);
+		this.loTransport = (TransportViewGroup) findViewById(R.id.loTransport);
 
 		RelativeLayout loSettings = (RelativeLayout) findViewById(R.id.loSettings);
 		FrameLayout.LayoutParams loSettingsParams = new FrameLayout.LayoutParams(loTransport.getLayoutParams());
@@ -278,12 +276,6 @@ public class PhotoBoothActivity extends FragmentActivity {
 		loSettingsParams.gravity = Gravity.TOP;
 		loSettingsParams.setMargins(marg8dp, (int) ((float) (loHeight - actionBarCompensation) * 0.5), marg8dp, 0);
 		loSettings.setLayoutParams(loSettingsParams);
-
-		twPhotoCount = new TextView[4];
-		twPhotoCount[0] = (TextView) findViewById(R.id.tw1);
-		twPhotoCount[1] = (TextView) findViewById(R.id.tw2);
-		twPhotoCount[2] = (TextView) findViewById(R.id.tw3);
-		twPhotoCount[3] = (TextView) findViewById(R.id.tw4);
 
 		captureButton = (ImageButton) findViewById(R.id.button_capture);
         captureButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -796,7 +788,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 		});
 		t.start();
 	}
-	
+
 	/***
 	 * Double-Tapping on the screens toggles the action bar and the settings layout
 	 */
@@ -917,7 +909,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 		runOnUiThread(new Runnable() {
 			public void run() {
-				twPhotoCount[index].setTextColor(color);
+				loTransport.setNumberColor(index, color);
 			}
 		});
 	}

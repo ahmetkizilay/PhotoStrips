@@ -121,81 +121,25 @@
 
     </RelativeLayout>
 
-    <TableLayout
+    <com.ahmetkizilay.image.photostrips.utils.TransportViewGroup
         android:id="@+id/loTransport"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="96dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/lowerpanel"
-        android:focusableInTouchMode="false"
-        android:stretchColumns="*" >
+        android:layout_marginRight="8dp" />
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/lowerpanel"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tw1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/one"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:background="@drawable/lowerpanel"/>
-
-            <TextView
-                android:id="@+id/tw2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/two"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:background="@drawable/lowerpanel"/>
-
-            <ImageButton
-                android:id="@+id/button_capture"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:alpha="1"
-                android:background="@drawable/roundedbutton"
-                android:minHeight="64dip"
-                android:minWidth="64dip"
-                android:textSize="48sp"
-                android:textStyle="normal"
-                android:textColor="#44ffffff"
-                android:src="@drawable/action_new"
-                />
-
-            <TextView
-                android:id="@+id/tw3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/three"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:background="@drawable/lowerpanel"/>
-
-            <TextView
-                android:id="@+id/tw4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/four"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:background="@drawable/lowerpanel"/>
-
-        </TableRow>
-    </TableLayout>
+    <ImageButton
+        android:id="@+id/button_capture"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="42dp"
+        android:alpha="1"
+        android:background="@drawable/roundedbutton"
+        android:minHeight="64dip"
+        android:minWidth="64dip"
+        android:src="@drawable/action_new"/>
 
 </FrameLayout>
