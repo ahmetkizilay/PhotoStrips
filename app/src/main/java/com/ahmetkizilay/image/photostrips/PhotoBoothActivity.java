@@ -42,7 +42,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -79,7 +78,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 	private boolean isCameraFrontFacing = true;
 	Camera mCamera;
 	CameraPreview mPreview;
-	Button captureButton;
+    ImageButton captureButton;
 
 	TextView[] twPhotoCount;
 
@@ -267,11 +266,11 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 		// Setting the positions for the views dynamically for better visual design
 		TableLayout loTransport = (TableLayout) findViewById(R.id.loTransport);
-		FrameLayout.LayoutParams loTransportParams = new FrameLayout.LayoutParams(loTransport.getLayoutParams());
-		loTransportParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, dispMetrics);
-		loTransportParams.gravity = Gravity.BOTTOM;
-		loTransportParams.setMargins(marg8dp, 0, marg8dp, Math.max(marg8dp, (int) ((float) (loHeight - loTransportParams.height) * 0.5)));
-		loTransport.setLayoutParams(loTransportParams);
+//		FrameLayout.LayoutParams loTransportParams = new FrameLayout.LayoutParams(loTransport.getLayoutParams());
+//		loTransportParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, dispMetrics);
+//		loTransportParams.gravity = Gravity.BOTTOM;
+//		loTransportParams.setMargins(marg8dp, 0, marg8dp, Math.max(marg8dp, (int) ((float) (loHeight - loTransportParams.height) * 0.5)));
+//		loTransport.setLayoutParams(loTransportParams);
 
 		RelativeLayout loSettings = (RelativeLayout) findViewById(R.id.loSettings);
 		FrameLayout.LayoutParams loSettingsParams = new FrameLayout.LayoutParams(loTransport.getLayoutParams());
@@ -286,7 +285,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 		twPhotoCount[2] = (TextView) findViewById(R.id.tw3);
 		twPhotoCount[3] = (TextView) findViewById(R.id.tw4);
 
-		captureButton = (Button) findViewById(R.id.button_capture);
+		captureButton = (ImageButton) findViewById(R.id.button_capture);
         captureButton.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View view) {
                 if(!mIsTimerMode) {
@@ -303,17 +302,15 @@ public class PhotoBoothActivity extends FragmentActivity {
         });
 		captureButton.setOnClickListener(new OnClickListener() {
 
-			public void onClick(View v) {
+            public void onClick(View v) {
 
-                if(!mIsTimerMode) {
-                    if(isCapturing) {
+                if (!mIsTimerMode) {
+                    if (isCapturing) {
                         demandModeTakeMyPicture();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(PhotoBoothActivity.this, "Long Press to start session", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
+                } else {
                     if (!isCapturing) {
                         prepareForCapture();
                         takeMyPicture();
@@ -322,10 +319,10 @@ public class PhotoBoothActivity extends FragmentActivity {
                         cancelCapturing(true);
                     }
                 }
-			}
-		});
+            }
+        });
 
-		btnSound = (ImageButton) findViewById(R.id.btnSound);		
+        btnSound = (ImageButton) findViewById(R.id.btnSound);
 		
 		btnSound.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -743,14 +740,14 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 					changePhotoCountFontColor(photoCount - 1, Color.RED);
 
-					changeCaptureButtonText("3");
+					changeCaptureButtonResource(R.drawable.number_three);
 					if (isSoundOn)
 						mpOne.start();
 					Thread.sleep(sleepTime);
 
 					if (!isCapturing)
 						return;
-					changeCaptureButtonText("2");
+					changeCaptureButtonResource(R.drawable.number_two);
 
 					if (isSoundOn)
 						mpOne.start();
@@ -758,7 +755,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 
 					if (!isCapturing)
 						return;
-					changeCaptureButtonText("1");
+					changeCaptureButtonResource(R.drawable.number_one);
 					if (isSoundOn)
 						mpOne.start();
 					Thread.sleep(sleepTime);
@@ -766,7 +763,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 					if (!isCapturing)
 						return;
 
-					changeCaptureButtonText(":)");
+					changeCaptureButtonResource(R.drawable.empty);
 					if (!isCapturing)
 						return;
 
@@ -837,7 +834,6 @@ public class PhotoBoothActivity extends FragmentActivity {
 		}
 		anim.setDuration(400);
 		rel.startAnimation(anim);
-
 	}
 
     @Override
@@ -881,7 +877,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 		changePhotoCountFontColor(2, Color.WHITE);
 		changePhotoCountFontColor(3, Color.WHITE);
 
-		changeCaptureButtonText("");
+		changeCaptureButtonResource(R.drawable.action_new);
 		
 		runOnUiThread(new Runnable() { public void run() { captureButton.setBackgroundResource(R.drawable.roundedbutton); }});
 
@@ -904,13 +900,18 @@ public class PhotoBoothActivity extends FragmentActivity {
 		photoParts.clear();
 	}
 
-	private void changeCaptureButtonText(final String val) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				captureButton.setText(val);
-			}
-		});
-	}
+    /***
+     * capture button shows numbers and a plus sign as images from the resources.
+     * This method is called to set a new background image for the capture button.
+     * @param resourceId for the image file
+     */
+    private void changeCaptureButtonResource(final int resourceId) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                captureButton.setImageResource(resourceId);
+            }
+        });
+    }
 
 	private void changePhotoCountFontColor(final int index, final int color) {
 
@@ -1086,6 +1087,6 @@ public class PhotoBoothActivity extends FragmentActivity {
 		inFromRight.setInterpolator(new AccelerateInterpolator());
 		return inFromRight;
 	}
-	
+
 	/********** BEGIN ANIMATION DEFINITIONS ********************** */
 }
