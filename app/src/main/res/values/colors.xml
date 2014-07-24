@@ -4,5 +4,7 @@
     <color name="bluish">#496B82</color>
     <color name="et_empty">#222</color>
     <color name="et_default">#111</color>
+    <color name="trans_gray">#cc333333</color>
+    <color name="more_trans_gray">#00333333</color>
 
 </resources>

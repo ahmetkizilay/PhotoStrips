@@ -18,7 +18,7 @@ import com.ahmetkizilay.image.photostrips.R;
  */
 public class TransportViewGroup extends TableLayout{
 
-    private final int numSize = 4;
+    private final int numSize = 5;
     private TextView[] tvNumbers;
 
     private boolean isShrunk = false;
@@ -42,6 +42,8 @@ public class TransportViewGroup extends TableLayout{
         this.tvNumbers[1] = (TextView) findViewById(R.id.tw2);
         this.tvNumbers[2] = (TextView) findViewById(R.id.tw3);
         this.tvNumbers[3] = (TextView) findViewById(R.id.tw4);
+        // this view will always be invisible
+        this.tvNumbers[4] = (TextView) findViewById(R.id.tw0); // this view will always be invisible
     }
 
     /***
