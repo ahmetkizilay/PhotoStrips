@@ -571,8 +571,9 @@ public class PhotoBoothActivity extends FragmentActivity {
 					int result = getCameraRotation();
 
 					Parameters params = mCamera.getParameters();
-
-					//Size previewSize = getMostSuitablePreviewSize(params.getSupportedPreviewSizes());
+                    List<Size> supportedPictureSizes = params.getSupportedPictureSizes();
+                    Size pictureSize = supportedPictureSizes.get((supportedPictureSizes.size() / 2) + (supportedPictureSizes.size() % 2));
+                    params.setPictureSize(pictureSize.width, pictureSize.height);
 
                     FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
 
@@ -618,7 +619,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 			 */
 			private int getCameraRotation() {
 				android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-				android.hardware.Camera.getCameraInfo(0, info);
+				android.hardware.Camera.getCameraInfo(camId, info);
 
 				int degrees = 0;
 				switch (getWindowManager().getDefaultDisplay().getRotation()) {

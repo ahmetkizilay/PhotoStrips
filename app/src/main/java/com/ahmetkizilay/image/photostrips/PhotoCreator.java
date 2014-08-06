@@ -77,39 +77,6 @@ public class PhotoCreator {
 		}
 	}
 
-    /***
-     * checking something called exif orientation to hopefully fix the problem of pictures
-     * appearing upside down on certain devices.
-     * the code is taken from an StackOverflow answer: http://stackoverflow.com/a/13176590/210391
-     * @param fileName
-     * @return
-     */
-    private static int getExifOrientation(String fileName) {
-        int degree = 0;
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(fileName);
-        }
-        catch(IOException exp) {
-        }
-
-        if(exif != null) {
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-            if(orientation != -1) {
-                switch(orientation) {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        return 90;
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        return 180;
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        return 270;
-                }
-            }
-        }
-
-        return degree;
-    }
-
 	private static boolean prepareFinalImagePortrait(List<String> partFileNames, boolean isCameraFrontFacing, String newFilePath) {
 		try {
 
@@ -120,7 +87,6 @@ public class PhotoCreator {
 			int[] verticalFrameBuffer = new int[0];
 
 			for (int i = 0; i < partFileNames.size(); i++) {
-                int exifOrientation = getExifOrientation(partFileNames.get(i));
 				Bitmap thisPicture = BitmapFactory.decodeFile(partFileNames.get(i));
 
 				int x = (int) ((float) (thisPicture.getWidth() - thisPicture.getHeight()) * 0.5);
@@ -131,7 +97,6 @@ public class PhotoCreator {
 				float scaleRatio = 480.0f / (float) thisPicture.getHeight();
 				Matrix rotateMatrix = new Matrix();
 				rotateMatrix.postScale(scaleRatio, (isCameraFrontFacing ? -1f : 1f) * scaleRatio);
-                if(exifOrientation == 180) rotateMatrix.preRotate(180);
 				rotateMatrix.postRotate(isCameraFrontFacing ? -90f : 90f);
 
 				thisPicture = Bitmap.createBitmap(thisPicture, x, y, w, h, rotateMatrix, true);
@@ -178,7 +143,6 @@ public class PhotoCreator {
 			int[] verticalFrameBuffer = new int[0];
 
 			for (int i = 0; i < partFileNames.size(); i++) {
-                int exifOrientation = getExifOrientation(partFileNames.get(i));
 				Bitmap thisPicture = BitmapFactory.decodeFile(partFileNames.get(i));
 				int x = (int) ((float) (thisPicture.getWidth() - thisPicture.getHeight()) * 0.5);
 				int y = 0;
@@ -187,8 +151,7 @@ public class PhotoCreator {
 
 				float scaleRatio = 480.0f / (float) thisPicture.getHeight();
 				Matrix rotateMatrix = new Matrix();
-				rotateMatrix.postScale(scaleRatio, (isCameraFrontFacing ? -1f : 1f) * scaleRatio);
-                if(exifOrientation == 180) rotateMatrix.preRotate(180);
+                rotateMatrix.postScale(scaleRatio, (isCameraFrontFacing ? -1f : 1f) * scaleRatio);
 				rotateMatrix.postRotate(isCameraFrontFacing ? -90f : 90f);
 
 				thisPicture = Bitmap.createBitmap(thisPicture, x, y, w, h, rotateMatrix, true);
