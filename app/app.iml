@@ -65,7 +65,6 @@
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="donations" level="project" />
-    <orderEntry type="library" exported="" name="android-support-v13" level="project" />
   </component>
 </module>
 
