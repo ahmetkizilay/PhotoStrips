@@ -39,6 +39,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -855,7 +856,7 @@ public class PhotoBoothActivity extends FragmentActivity {
         photoCount = 0;
         photoParts.clear();
         finalImagePath = null;
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         captureButton.setBackgroundResource(R.drawable.roundedbutton_capturing);
     }
 	/***
@@ -879,6 +880,8 @@ public class PhotoBoothActivity extends FragmentActivity {
 		if (cancelled) {
 			Toast.makeText(this, "Photo Cancelled", Toast.LENGTH_SHORT).show();
 		}
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 	
 	/***
