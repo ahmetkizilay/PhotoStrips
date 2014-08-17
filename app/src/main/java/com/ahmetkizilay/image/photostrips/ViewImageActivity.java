@@ -4,37 +4,23 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.util.TypedValue;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.RotateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
-import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.ConfirmDialogFragment;
 import com.ahmetkizilay.image.photostrips.utils.TouchImageView;
@@ -45,9 +31,7 @@ import com.ahmetkizilay.modules.listapps.AppListerViewGroup;
 import java.io.File;
 import java.util.Locale;
 
-public class ViewImageActivity extends FragmentActivity {
-    // using this for faking an action bar for earlier versions of android.
-    final ActionBarHelper mActionBarHelper = ActionBarHelper.createInstance(this);
+public class ViewImageActivity extends ActionBarActivity {
 
     private AppListerViewGroup wgSharePanel;
     private Uri mPicture;
@@ -56,7 +40,7 @@ public class ViewImageActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActionBarHelper.onCreate(savedInstanceState);
+        // mActionBarHelper.onCreate(savedInstanceState);
 
         Configuration config = getResources().getConfiguration();
         if (config.locale == null)
@@ -233,36 +217,10 @@ public class ViewImageActivity extends FragmentActivity {
     }
 
     /* ********* BEGIN METHODS RELATED TO THE ACTION BAR ********************** */
-    protected ActionBarHelper getActionBarHelper() {
-        return mActionBarHelper;
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mActionBarHelper.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onTitleChanged(CharSequence title, int color) {
-        mActionBarHelper.onTitleChanged(title, color);
-        super.onTitleChanged(title, color);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-
-        boolean retValue = false;
-        retValue |= mActionBarHelper.onCreateOptionsMenu(menu);
-        retValue |= super.onCreateOptionsMenu(menu);
-        return retValue;
-    }
-
-    @Override
-    public MenuInflater getMenuInflater() {
-        return mActionBarHelper.getMenuInflater(super.getMenuInflater());
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
     }
 	/* ********* END METHODS RELATED TO THE ACTION BAR ********************** */
 

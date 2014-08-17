@@ -5,16 +5,14 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
 import com.ahmetkizilay.image.photostrips.utils.GalleryItemAdapter;
 import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
@@ -23,10 +21,7 @@ import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 import java.io.File;
 import java.util.Locale;
 
-public class AltGalleryActivity extends FragmentActivity {
-	// using this for faking an action bar for earlier versions of android.
-	final ActionBarHelper mActionBarHelper = ActionBarHelper.createInstance(this);
-
+public class AltGalleryActivity extends ActionBarActivity {
 	private String home_directory_string = "";
 
     private GridView lvGallery;
@@ -36,7 +31,7 @@ public class AltGalleryActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActionBarHelper.onCreate(savedInstanceState);
+		// mActionBarHelper.onCreate(savedInstanceState);
 
 		setContentView(R.layout.alt_gallery);
 
@@ -118,39 +113,10 @@ public class AltGalleryActivity extends FragmentActivity {
             }
         }
     }
-	
-	/* ********* BEGIN METHODS RELATED TO THE ACTION BAR ********************** */
-	protected ActionBarHelper getActionBarHelper() {
-		return mActionBarHelper;
-	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mActionBarHelper.onPostCreate(savedInstanceState);
-	}
-
-	@Override
-	protected void onTitleChanged(CharSequence title, int color) {
-		mActionBarHelper.onTitleChanged(title, color);
-		super.onTitleChanged(title, color);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-
-		boolean retValue = false;
-		retValue |= mActionBarHelper.onCreateOptionsMenu(menu);
-		retValue |= super.onCreateOptionsMenu(menu);
-		return retValue;
-	}
-	
-	@Override
-	public MenuInflater getMenuInflater() {
-		return mActionBarHelper.getMenuInflater(super.getMenuInflater());
-	}
-	/* ********* END METHODS RELATED TO THE ACTION BAR ********************** */
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 }

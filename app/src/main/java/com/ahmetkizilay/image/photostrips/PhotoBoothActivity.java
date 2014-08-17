@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -25,15 +24,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
@@ -49,7 +47,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.ahmetkizilay.image.photostrips.compat.ActionBarHelper;
 import com.ahmetkizilay.image.photostrips.dialogs.AboutMeDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.CompletionDialogFragment;
 import com.ahmetkizilay.image.photostrips.dialogs.PhotoCreationDialogFragment;
@@ -58,10 +55,7 @@ import com.ahmetkizilay.image.photostrips.utils.TransportViewGroup;
 import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
 import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
-public class PhotoBoothActivity extends FragmentActivity {
-
-	// using this for faking an action bar for earlier versions of android.
-	final ActionBarHelper mActionBarHelper = ActionBarHelper.createInstance(this);
+public class PhotoBoothActivity extends ActionBarActivity {
 
 	private int disp_height, disp_width;
 
@@ -192,7 +186,7 @@ public class PhotoBoothActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActionBarHelper.onCreate(savedInstanceState);
+		// mActionBarHelper.onCreate(savedInstanceState);
 
 		setContentView(R.layout.booth);
 
@@ -1013,13 +1007,9 @@ public class PhotoBoothActivity extends FragmentActivity {
 	}
 	
 	/* ****************** END METHODS FOR DIALOGS ************************ */
-	
 
-
-	
 	/* ********* BEGIN METHODS RELATED TO THE ACTION BAR ********************** */
-	
-	@SuppressLint("NewApi")
+
 	private void toggleActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			if (getActionBar().isShowing()) {
@@ -1031,42 +1021,14 @@ public class PhotoBoothActivity extends FragmentActivity {
 	}
 
 	@Override
-	public MenuInflater getMenuInflater() {
-		return mActionBarHelper.getMenuInflater(super.getMenuInflater());
-	}
-	
-	protected ActionBarHelper getActionBarHelper() {
-		return mActionBarHelper;
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mActionBarHelper.onPostCreate(savedInstanceState);
-	}
-
-	@Override
-	protected void onTitleChanged(CharSequence title, int color) {
-		mActionBarHelper.onTitleChanged(title, color);
-		super.onTitleChanged(title, color);
-	}
-	
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-
-		boolean retValue = false;
-		retValue |= mActionBarHelper.onCreateOptionsMenu(menu);
-		retValue |= super.onCreateOptionsMenu(menu);
-		return retValue;
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
 	}
 	
 	/********** END METHODS RELATED TO THE ACTION BAR ********************** */
 	
-	
-	
-	
+
 	/********** BEGIN ANIMATION DEFINITIONS ********************** */
 	
 	public static Animation outToLeftAnimation() {
