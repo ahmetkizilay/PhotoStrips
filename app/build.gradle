@@ -18,8 +18,8 @@ android {
         applicationId 'com.ahmetkizilay.image.photostrips'
         minSdkVersion 9
         targetSdkVersion 19
-        versionCode 12
-        versionName '1.2.3'
+        versionCode 13
+        versionName '1.2.5'
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_5
             targetCompatibility JavaVersion.VERSION_1_5
