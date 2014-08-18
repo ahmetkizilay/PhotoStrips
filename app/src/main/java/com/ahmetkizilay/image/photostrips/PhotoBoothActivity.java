@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -27,14 +26,17 @@ import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,7 +59,7 @@ import com.ahmetkizilay.image.photostrips.utils.TransportViewGroup;
 import com.ahmetkizilay.modules.donations.PaymentDialogFragment;
 import com.ahmetkizilay.modules.donations.ThankYouDialogFragment;
 
-public class PhotoBoothActivity extends ActionBarActivity {
+public class PhotoBoothActivity extends ActionBarActivity implements GestureDetector.OnGestureListener {
 
 	private int disp_height, disp_width;
 
@@ -182,10 +184,17 @@ public class PhotoBoothActivity extends ActionBarActivity {
 			preview.addView(mPreview, 0);
 		}
 	};
-	
-	
 
-	@Override
+    /**
+     * Fling right or left to apply supported color effects
+     */
+    private GestureDetectorCompat mGestureDetector;
+    private List<String> mColorEffects;
+    private int numColorEffects = 0;
+    private int currentColorEffectIndex = 0;
+
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// mActionBarHelper.onCreate(savedInstanceState);
@@ -405,6 +414,7 @@ public class PhotoBoothActivity extends ActionBarActivity {
 		loParams.height = loHeight;
 		bottomBlur.setLayoutParams(loParams);
 
+        this.mGestureDetector = new GestureDetectorCompat(this, this);
 		Thread.setDefaultUncaughtExceptionHandler(new
 		 CustomUncaughtExceptionHandler());
 
@@ -572,10 +582,15 @@ public class PhotoBoothActivity extends ActionBarActivity {
                     Size pictureSize = supportedPictureSizes.get((supportedPictureSizes.size() / 2) + (supportedPictureSizes.size() % 2));
                     params.setPictureSize(pictureSize.width, pictureSize.height);
 
-//                    List<String> colorEffects = params.getSupportedColorEffects();
-//                    if(colorEffects.size() > 0) {
-//                        params.setColorEffect(colorEffects.get(new Random().nextInt(colorEffects.size())));
-//                    }
+                    mColorEffects = params.getSupportedColorEffects();
+                    if(mColorEffects != null && mColorEffects.size() > 0) {
+                        numColorEffects = mColorEffects.size();
+                        currentColorEffectIndex = 0;
+                        params.setColorEffect(Parameters.EFFECT_NONE);
+                    }
+                    else {
+                        numColorEffects = 0; currentColorEffectIndex = 0;
+                    }
 
                     FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
 
@@ -949,8 +964,8 @@ public class PhotoBoothActivity extends ActionBarActivity {
 		File output = new File(home_directory_string + (forPart ? "/TMP_" : "/IMG_") + timeStamp + ".JPG");
 		return output;
 	}
-	
-	class CustomUncaughtExceptionHandler implements UncaughtExceptionHandler {
+
+    class CustomUncaughtExceptionHandler implements UncaughtExceptionHandler {
 		public void uncaughtException(Thread thread, Throwable ex) {
 			String message = ex.getMessage();
 			System.out.println(message);
@@ -1073,4 +1088,46 @@ public class PhotoBoothActivity extends ActionBarActivity {
 	}
 
 	/********** BEGIN ANIMATION DEFINITIONS ********************** */
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.mGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
+        return false;
+    }
+
+    public void onLongPress(MotionEvent motionEvent) {
+    }
+
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float xVel, float yVel) {
+
+        if(numColorEffects > 0) {
+            if(xVel > 0) {
+                currentColorEffectIndex = (currentColorEffectIndex + numColorEffects - 1) % numColorEffects;
+            }
+            else {
+                currentColorEffectIndex = (currentColorEffectIndex + 1) % numColorEffects;
+            }
+            Parameters params = mCamera.getParameters();
+            params.setColorEffect(mColorEffects.get(currentColorEffectIndex));
+            mCamera.setParameters(params);
+        }
+
+        return true;
+    }
 }
