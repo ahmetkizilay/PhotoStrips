@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -22,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -570,6 +572,11 @@ public class PhotoBoothActivity extends ActionBarActivity {
                     Size pictureSize = supportedPictureSizes.get((supportedPictureSizes.size() / 2) + (supportedPictureSizes.size() % 2));
                     params.setPictureSize(pictureSize.width, pictureSize.height);
 
+//                    List<String> colorEffects = params.getSupportedColorEffects();
+//                    if(colorEffects.size() > 0) {
+//                        params.setColorEffect(colorEffects.get(new Random().nextInt(colorEffects.size())));
+//                    }
+
                     FrameLayout preview = (FrameLayout) findViewById(R.id.mainLayout);
 
                     Size previewSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(), preview.getMeasuredWidth(), preview.getMeasuredHeight());
@@ -853,32 +860,51 @@ public class PhotoBoothActivity extends ActionBarActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         captureButton.setBackgroundResource(R.drawable.roundedbutton_capturing);
     }
+
 	/***
 	 * reverts Views to their default states.
+     * Checks if current thread is the UI thread to make sure Views are properly reverted
 	 * @param cancelled if photo capture is cancelled
 	 */
 	private void cancelCapturing(boolean cancelled) {
 		isCapturing = false;
 
-		changePhotoCountFontColor(0, Color.WHITE);
-		changePhotoCountFontColor(1, Color.WHITE);
-		changePhotoCountFontColor(2, Color.WHITE);
-		changePhotoCountFontColor(3, Color.WHITE);
-
-		changeCaptureButtonResource(R.drawable.action_new);
-		
-		runOnUiThread(new Runnable() { public void run() { captureButton.setBackgroundResource(R.drawable.roundedbutton); }});
+        if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            cancelCapturingUI();
+        }
+        else {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    cancelCapturingUI();
+                }
+            });
+        }
 
 		deletePartPhotoFiles();
 
 		if (cancelled) {
 			Toast.makeText(this, "Photo Cancelled", Toast.LENGTH_SHORT).show();
 		}
-
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
-	
-	/***
+
+    /**
+     * This is the UI Related part of cancel capturing.
+     * cancelCapturing method checks if it is currently on the UI Thread.
+     * If not, it makes sure this method run on the UI Thread.
+     */
+    private void cancelCapturingUI() {
+        changePhotoCountFontColor(0, Color.WHITE);
+        changePhotoCountFontColor(1, Color.WHITE);
+        changePhotoCountFontColor(2, Color.WHITE);
+        changePhotoCountFontColor(3, Color.WHITE);
+
+        changeCaptureButtonResource(R.drawable.action_new);
+        captureButton.setBackgroundResource(R.drawable.roundedbutton);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+
+    /***
 	 * Deletes temp photo parts that make up the final image
 	 */
 	private void deletePartPhotoFiles() {
