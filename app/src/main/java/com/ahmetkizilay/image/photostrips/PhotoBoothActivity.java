@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
@@ -1107,14 +1108,67 @@ public class PhotoBoothActivity extends ActionBarActivity implements GestureDete
         return false;
     }
 
+    /**
+     * Vertical motion is used to zoom between values. startSmoothZoom is used if supported by the
+     * device.
+     * @param motionEvent
+     * @param motionEvent2
+     * @param v
+     * @param v2
+     * @return
+     */
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
+        if(Math.abs(v) > Math.abs(v2)) {
+            return true;
+        }
+
+        Parameters params = mCamera.getParameters();
+        if(params.isSmoothZoomSupported()) {
+            if(v2 > 0) {
+                mCamera.startSmoothZoom(Math.min(params.getMaxZoom(), params.getZoom() + 1));
+            }
+            else {
+                mCamera.startSmoothZoom(Math.min(params.getMaxZoom(), params.getZoom() - 1));
+            }
+        }
+        else {
+            if(v2 > 0) {
+                params.setZoom(Math.min(params.getMaxZoom(), params.getZoom() + 1));
+            }
+            else {
+                params.setZoom(Math.max(0, params.getZoom() - 1));
+            }
+            mCamera.setParameters(params);
+        }
+
         return false;
     }
 
     public void onLongPress(MotionEvent motionEvent) {
     }
 
+    /**
+     * Horizontal fling is monitored to switch color effects on the image.
+     *
+     * @param event1
+     * @param event2
+     * @param xVel
+     * @param yVel
+     * @return
+     */
     public boolean onFling(MotionEvent event1, MotionEvent event2, float xVel, float yVel) {
+
+        float maxFlingVelocity    = ViewConfiguration.get(this).getScaledMaximumFlingVelocity();
+        float velocityPercentX    = Math.abs(xVel) / maxFlingVelocity;
+        float MIN_VEL = 0.2f;
+
+        if(Math.abs(yVel) > Math.abs(xVel)) {
+            return true;
+        }
+
+        if(velocityPercentX < MIN_VEL) {
+            return false;
+        }
 
         if(numColorEffects > 0) {
             if(xVel > 0) {
@@ -1128,6 +1182,6 @@ public class PhotoBoothActivity extends ActionBarActivity implements GestureDete
             mCamera.setParameters(params);
         }
 
-        return true;
+        return false;
     }
 }
